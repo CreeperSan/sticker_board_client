@@ -1,0 +1,37 @@
+name: sticker_board_client
+description: A new Flutter project.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+
+  # lib from base layer
+  device_information:
+    path: base/device_information
+  kv_storage:
+    path: base/kv_storage
+  log:
+    path: base/log
+  ui_lib:
+    path: base/ui_lib
+
+  # lib from business layer
+  account:
+    path: business/account
+  splash_screen:
+    path: business/splash_screen
+  version:
+    path: business/version
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
