@@ -15,9 +15,9 @@ class StickerBoardApplication extends StatelessWidget {
       title: ApplicationConst.ApplicationName,
       initialRoute: '/',
       routes: {
-        '/' : (context) => SplashScreenPage(),
-        '/version' : (context) => VersionHistoryPage(),
-        '/account' : (context) => LoginPage(),
+        '/' : (context, [params]) => SplashScreenPage(),
+        '/version' : (context, [params]) => VersionHistoryPage(),
+        '/account' : (context, [params]) => LoginPage(),
       },
     );
   }
