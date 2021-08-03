@@ -29,5 +29,12 @@ class DeviceInformation{
     return DevicePlatform.Unsupported;
   }
 
+  static int get platformInt => convertDevicePlatformToInt(platform);
+
+  static String get brand => 'brand'; // Todo
+
+  static String get deviceName => 'device name'; // Todo
+
+  static String get machineCode => '123456789012345678'; // Todo
 
 }

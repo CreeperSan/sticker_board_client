@@ -26,7 +26,7 @@ class NetworkManager {
     _dio = Dio();
   }
 
-  Future<CancelToken> fetch(String url, {
+  CancelToken fetch(String url, {
     RequestMethod requestMethod = RequestMethod.Get,
     Map<String, dynamic> urlParams = const {},
     Map<String, dynamic> data = const {},
@@ -75,7 +75,7 @@ class NetworkManager {
       }
     }
 
-    return Future.value(cancelToken);
+    return cancelToken;
   }
 
 }

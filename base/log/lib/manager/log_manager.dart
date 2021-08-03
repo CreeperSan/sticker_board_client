@@ -9,7 +9,9 @@ class LogManager {
   static ILogger? _logger;
 
   static Future<bool> initialize() async {
-    _logger = LoggerFactory.getLogger();
+    if(_logger == null){
+      _logger = LoggerFactory.getLogger();
+    }
     return true;
   }
 

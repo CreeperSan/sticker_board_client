@@ -2,6 +2,7 @@ name: account
 description: A new Flutter package project.
 version: 0.0.1
 homepage:
+publish_to: none
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -10,6 +11,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  network:
+    path: ../../base/network
+  log:
+    path: ../../base/log
+  kv_storage:
+    path: ../../base/kv_storage
+  device_information:
+    path: ../../base/device_information
+  lifecycle:
+    path: ../../base/lifecycle
+  ui_lib:
+    path: ../../base/ui_lib
+  account_api:
+    path: ../account_api
 
 dev_dependencies:
   flutter_test:
