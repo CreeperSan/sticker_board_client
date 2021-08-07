@@ -13,7 +13,7 @@ class StickerBoardApplication extends StatelessWidget {
 
     return MaterialApp(
       title: ApplicationConst.ApplicationName,
-      initialRoute: '/account',
+      initialRoute: '/',
       routes: {
         '/' : (context, [params]) => SplashScreenPage(),
         '/version' : (context, [params]) => VersionHistoryPage(),

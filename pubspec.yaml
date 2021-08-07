@@ -24,10 +24,14 @@ dependencies:
   # lib from business layer
   account:
     path: business/account
+  account_api:
+    path: business/account_api
   splash_screen:
     path: business/splash_screen
   version:
     path: business/version
+  version_api:
+    path: business/version_api
 
 dev_dependencies:
   flutter_test:

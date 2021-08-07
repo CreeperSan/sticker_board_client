@@ -18,6 +18,8 @@ class NetworkManager {
     return _instance!;
   }
 
+  static NetworkManager get instance => _getInstance();
+
   ///
 
   late Dio _dio;

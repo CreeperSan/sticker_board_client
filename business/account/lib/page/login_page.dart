@@ -1,6 +1,6 @@
 
 import 'package:account/const/const_account.dart';
-import 'package:account/manager/account_manager.dart';
+import 'package:account/operator/account_operator.dart';
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
 import 'package:device_information/device_information.dart';
@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage>{
     final accountStr = _accountController.text;
     final passwordStr = _passwordController.text;
 
-    AccountManager().login(
+    AccountOperator().login(
       account: accountStr,
       password: passwordStr,
       platform: DeviceInformation.platformInt,

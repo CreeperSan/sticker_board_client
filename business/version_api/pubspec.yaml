@@ -1,4 +1,4 @@
-name: version
+name: version_api
 description: A new Flutter package project.
 version: 0.0.1
 homepage:
@@ -10,8 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  version_api:
-    path: ../version_api
   network:
     path: ../../base/network
 
@@ -20,3 +18,4 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
+

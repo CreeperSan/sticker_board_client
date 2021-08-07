@@ -1,0 +1,2 @@
+
+const CONST_APPLICATION_ID = 2;

@@ -2,22 +2,24 @@
 import 'package:account_api/account_api.dart';
 import 'package:network/network.dart';
 
-class AccountManager extends AccountInterface {
+class AccountOperator extends AccountInterface {
 
   // Singleton Pattern
 
-  AccountManager._();
+  AccountOperator._();
 
-  static AccountManager? _instance;
+  static AccountOperator? _instance;
 
   static _getInstance(){
     if(_instance == null){
-      _instance = AccountManager._();
+      _instance = AccountOperator._();
     }
     return _instance!;
   }
 
-  factory AccountManager() => _getInstance();
+  factory AccountOperator() => _getInstance();
+
+  static AccountOperator get instance => _getInstance();
 
   // Data
 
