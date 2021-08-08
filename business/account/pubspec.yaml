@@ -17,6 +17,8 @@ dependencies:
     path: ../../base/log
   kv_storage:
     path: ../../base/kv_storage
+  toast:
+    path: ../../base/toast
   device_information:
     path: ../../base/device_information
   lifecycle:

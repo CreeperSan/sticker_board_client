@@ -1,11 +1,19 @@
 
 import 'package:account/const/const_account.dart';
 import 'package:account/operator/account_operator.dart';
+import 'package:account_api/account_api.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
 import 'package:device_information/device_information.dart';
+import 'package:toast/toast.dart';
 
 class LoginPage extends StatefulWidget{
+  void Function(LoginSuccessModel loginSuccessModel) onLoginSuccess;
+
+  LoginPage({
+    required this.onLoginSuccess,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -31,21 +39,43 @@ class _LoginPageState extends State<LoginPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
       body: Center(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(Icons.padding,
+              size: 64,
+              color: Colors.lightBlue,
+            ),
             TextField(
               controller: _accountController,
+              decoration: InputDecoration(
+                hintText: 'Your Account',
+              ),
             ),
             TextField(
               controller: _passwordController,
+              decoration: InputDecoration(
+                hintText: 'Your Password',
+              ),
             ),
-            IconButton(
-              icon: Icon(Icons.arrow_forward_rounded),
+            CupertinoButton(
+              child: Text('Login',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
               onPressed: _triggerLogin,
+            ),
+            CupertinoButton(
+              child: Text('Register',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              onPressed: _triggerRegister,
             ),
           ],
         ),
@@ -60,20 +90,43 @@ class _LoginPageState extends State<LoginPage>{
     final accountStr = _accountController.text;
     final passwordStr = _passwordController.text;
 
-    AccountOperator().login(
-      account: accountStr,
-      password: passwordStr,
+    // if(accountStr.isEmpty){
+    //   ToastManager.show('Account can not be empty.');
+    //   return;
+    // }
+    //
+    // if(passwordStr.isEmpty){
+    //   ToastManager.show('Password can not be empty.');
+    //   return;
+    // }
+
+    AccountOperator.instance.login(
+      // account: accountStr,
+      // password: passwordStr,
+      account: 'creepersan',
+      password: 'Aa888888',
       platform: DeviceInformation.platformInt,
       brand: DeviceInformation.brand,
       deviceName: DeviceInformation.deviceName,
       machineCode: DeviceInformation.machineCode,
       onSuccess: (accountModel){
         LogManager.i('Login Succeed. Token=${accountModel.token}', ConstAccount.TAG);
+
+        widget.onLoginSuccess.call(LoginSuccessModel(
+          account: accountModel.account,
+          password: passwordStr,
+          token: accountModel.token,
+          effectTime: accountModel.effectTime,
+        ));
       },
       onFail: (code, message){
         LogManager.w('Login Failed. Message=$message', ConstAccount.TAG);
       }
     );
+  }
+
+  void _triggerRegister(){
+    Navigator.pushNamed(context, '/account/register');
   }
 
 }

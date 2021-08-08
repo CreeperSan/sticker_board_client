@@ -20,6 +20,8 @@ dependencies:
     path: base/log
   ui_lib:
     path: base/ui_lib
+  toast:
+    path: base/toast
 
   # lib from business layer
   account:
