@@ -121,6 +121,7 @@ class _LoginPageState extends State<LoginPage>{
       },
       onFail: (code, message){
         LogManager.w('Login Failed. Message=$message', ConstAccount.TAG);
+        ToastManager.show('Login Fail, $message');
       }
     );
   }

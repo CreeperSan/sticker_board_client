@@ -34,6 +34,10 @@ dependencies:
     path: business/version
   version_api:
     path: business/version_api
+  sticker_board:
+    path: business/sticker_board
+  sticker_board_api:
+    path: business/sticker_board_api
 
 dev_dependencies:
   flutter_test:
