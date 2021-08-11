@@ -12,6 +12,10 @@ dependencies:
     sdk: flutter
   sticker_board_api:
     path: ../sticker_board_api
+  network:
+    path: ../../base/network
+  log:
+    path: ../../base/log
 
 dev_dependencies:
   flutter_test:
