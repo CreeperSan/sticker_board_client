@@ -1,8 +1,12 @@
 
+import 'dart:developer';
+
 import 'package:account_api/account_api.dart';
 import 'package:network/network.dart';
+import 'package:log/log.dart';
 
 class AccountOperator extends AccountInterface {
+  static const TAG = 'AccountOperation';
 
   // Singleton Pattern
 
@@ -54,10 +58,6 @@ class AccountOperator extends AccountInterface {
   }) {
     NetworkManager().fetch('http://localhost:8080/api/account/v1/login',
       requestMethod: RequestMethod.Post,
-      header: {
-        'version_code' : 1,
-        'platform' : 1,
-      },
       data: {
         "account" : account,
         "password" : password,
@@ -67,10 +67,12 @@ class AccountOperator extends AccountInterface {
         "machine_code" : machineCode,
       },
       onSuccess: (result){
+        LogManager.i('Login network request finish. result = $result', TAG);
         final code = result?['code'] ?? 0;
         if(code == 200){
           final token = result?['data']?['token']?.toString() ?? '';
           final effectiveTime = int.tryParse(result?['data']?['effective_time']?.toString() ?? '') ?? 0;
+          final uid = int.tryParse(result?['data']?['uid']?.toString() ?? '') ?? 0;
           onSuccess?.call(AccountModel(
             account: account,
             platform: platform,
@@ -79,6 +81,7 @@ class AccountOperator extends AccountInterface {
             machineCode: machineCode,
             token: token,
             effectTime: effectiveTime,
+            uid: uid,
           ));
         } else {
           final message = result?['msg'] ?? '';
@@ -86,6 +89,7 @@ class AccountOperator extends AccountInterface {
         }
       },
       onFail: (err){
+        LogManager.e('Login network request failed, error = $err', TAG);
         onFail?.call(400, 'Can not connect to server');
       }
     );

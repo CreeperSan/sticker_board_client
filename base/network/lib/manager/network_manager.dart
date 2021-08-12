@@ -23,9 +23,13 @@ class NetworkManager {
   ///
 
   late Dio _dio;
+  late BaseOptions _dioBaseOptions;
 
   NetworkManager._internal(){
     _dio = Dio();
+    _dioBaseOptions = BaseOptions();
+
+    _dio.options = _dioBaseOptions;
   }
 
   CancelToken fetch(String url, {
@@ -78,6 +82,10 @@ class NetworkManager {
     }
 
     return cancelToken;
+  }
+
+  void setCommonHeader(Map<String, dynamic> header){
+    _dio.options.headers = header;
   }
 
 }

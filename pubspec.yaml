@@ -22,6 +22,10 @@ dependencies:
     path: base/ui_lib
   toast:
     path: base/toast
+  lifecycle:
+    path: base/lifecycle
+  network:
+    path: base/network
 
   # lib from business layer
   account:

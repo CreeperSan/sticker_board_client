@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage>{
       // password: passwordStr,
       account: 'creepersan',
       password: 'Aa888888',
-      platform: DeviceInformation.platformInt,
+      platform: DeviceInformation.platform,
       brand: DeviceInformation.brand,
       deviceName: DeviceInformation.deviceName,
       machineCode: DeviceInformation.machineCode,
@@ -117,6 +117,7 @@ class _LoginPageState extends State<LoginPage>{
           password: passwordStr,
           token: accountModel.token,
           effectTime: accountModel.effectTime,
+          uid: accountModel.uid,
         ));
       },
       onFail: (code, message){

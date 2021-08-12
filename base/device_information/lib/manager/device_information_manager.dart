@@ -7,7 +7,7 @@ class DeviceInformation{
 
   DeviceInformation._();
 
-  static DevicePlatform get platform {
+  static int get platform {
     if(kIsWeb){
       return DevicePlatform.Browser;
     }
@@ -15,7 +15,7 @@ class DeviceInformation{
       return DevicePlatform.Android;
     }
     if(Platform.isIOS){
-      return DevicePlatform.iOS;
+      return DevicePlatform.IOS;
     }
     if(Platform.isLinux){
       return DevicePlatform.Linux;
@@ -28,8 +28,6 @@ class DeviceInformation{
     }
     return DevicePlatform.Unsupported;
   }
-
-  static int get platformInt => convertDevicePlatformToInt(platform);
 
   static String get brand => 'brand'; // Todo
 

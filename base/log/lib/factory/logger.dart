@@ -20,7 +20,7 @@ class LoggerFactory{
         return MacOSLogger();
       case DevicePlatform.Linux:
         return LinuxLogger();
-      case DevicePlatform.iOS:
+      case DevicePlatform.IOS:
         return IOSLogger();
       case DevicePlatform.Android:
         return AndroidLogger();

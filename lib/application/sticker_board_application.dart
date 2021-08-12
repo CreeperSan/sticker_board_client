@@ -1,15 +1,58 @@
 import 'package:account_api/account_api.dart';
 import 'package:device_information/device_information.dart';
 import 'package:flutter/material.dart';
+import 'package:kv_storage/manager/kv_storage_manager.dart';
+import 'package:log/log.dart';
+import 'package:network/manager/network_manager.dart';
 import 'package:sticker_board_client/const/application_const.dart';
 import 'package:account/account.dart';
 import 'package:sticker_board_client/const/router_const.dart';
+import 'package:sticker_board_client/manager/prefs_manager.dart';
 import 'package:toast/manager/toast_manager.dart';
 import 'package:version/version.dart';
 import 'package:splash_screen/splash_screen.dart';
 import 'package:sticker_board/sticker_board.dart' as StickerBoard;
+import 'package:lifecycle/lifecycle.dart';
+import 'package:account_api/account_api.dart';
+import 'package:sticker_board/operator/category_operator.dart';
+import 'package:sticker_board/operator/sticker_board_operator.dart';
+import 'package:sticker_board/operator/tag_operator.dart';
+import 'package:version/operator/version_operator.dart';
+import 'package:version_api/version_api.dart';
+import 'package:sticker_board_api/sticker_board_api.dart';
+import 'package:account/account.dart';
+import 'package:device_information/device_information.dart';
 
 class StickerBoardApplication extends StatelessWidget {
+
+  static const TAG = 'StickerBoardApplication';
+
+  StickerBoardApplication(){
+    // Initialize Basic Module
+    KVStorageManager.initialize();
+
+    // Initialize Network
+    NetworkManager.instance.setCommonHeader({
+      'sticker-board-token' : PrefsManager.instance.token,
+      'sticker-board-brand' : DeviceInformation.brand,
+      'sticker-board-device-name' : DeviceInformation.deviceName,
+      'sticker-board-machine-code' : DeviceInformation.machineCode,
+      'sticker-board-platform' : DeviceInformation.platform,
+      'sticker-board-uid' : PrefsManager.instance.uid,
+      'sticker-board-version-code' : ApplicationConst.ApplicationVersionCode,
+    });
+
+    // Initialize Prefs
+    PrefsManager.instance.prevVersion = ApplicationConst.ApplicationVersionCode;
+
+    // Initialize Modules
+    AccountManager.install(AccountOperator.instance);
+    VersionManager.install(VersionOperator.instance);
+    TagManager.install(TagOperator.instance);
+    CategoryManager.install(CategoryOperator.instance);
+    StickerBoardManager.install(StickerBoardOperator.instance);
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +106,25 @@ class StickerBoardApplication extends StatelessWidget {
   /// Login Success
   void _onLoginSuccess(BuildContext context, LoginSuccessModel loginSuccessModel){
     ToastManager.show('Login Success, Token = ${loginSuccessModel.token}');
+
+    PrefsManager.instance.uid = loginSuccessModel.uid;
+    PrefsManager.instance.token = loginSuccessModel.token;
+
+    LogManager.i('Update Application UID=${PrefsManager.instance.uid} Token=${PrefsManager.instance.token}', TAG);
+
+    NetworkManager.instance.setCommonHeader({
+      'sticker-board-token' : PrefsManager.instance.token,
+      'sticker-board-brand' : DeviceInformation.brand,
+      'sticker-board-device-name' : DeviceInformation.deviceName,
+      'sticker-board-machine-code' : DeviceInformation.machineCode,
+      'sticker-board-platform' : DeviceInformation.platform,
+      'sticker-board-uid' : PrefsManager.instance.uid,
+      'sticker-board-version-code' : ApplicationConst.ApplicationVersionCode,
+    });
+
     Navigator.pushReplacementNamed(context, RouterConst.StickerBoardIndex);
+
+    LifecycleNotifier.instance.fire(Lifecycle.OnLogin);
   }
 
 }

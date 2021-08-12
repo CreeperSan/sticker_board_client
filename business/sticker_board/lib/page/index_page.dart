@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:sticker_board/operator/tag_operator.dart';
 
 class IndexPage extends StatefulWidget{
 
@@ -11,6 +12,12 @@ class IndexPage extends StatefulWidget{
 }
 
 class _IndexPageState extends State<IndexPage>{
+
+  @override
+  void initState() {
+    super.initState();
+    TagOperator.instance.getTagList();
+  }
 
   @override
   Widget build(BuildContext context) {

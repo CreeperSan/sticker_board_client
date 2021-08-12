@@ -3,6 +3,13 @@ import 'package:lifecycle/enum/lifecycle.dart';
 import 'package:lifecycle/subscriber/lifecycle_subscriber.dart';
 
 class LifecycleNotifier {
+
+  LifecycleNotifier._();
+
+  static LifecycleNotifier instance = LifecycleNotifier._();
+
+
+
   Map<Lifecycle, Set<LifecycleSubscriber>> _data = {};
 
   void fire(Lifecycle lifecycle){
