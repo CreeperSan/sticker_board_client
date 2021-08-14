@@ -34,11 +34,34 @@ class TagOperator extends TagInterface{
   }) {
     NetworkManager.instance.fetch('http://localhost:8080/api/tag/v1/list',
       requestMethod: RequestMethod.Post,
-      onSuccess: (dynamic){
-        LogManager.d('get tag list by network finish. response -> $dynamic', TAG);
+      onSuccess: (response){
+        LogManager.d('get tag list by network finish. response -> $response', TAG);
+        List<TagModel> tagModelList = [];
+        final responseCode = response['code'] ?? 0;
+        final responseMessage = response['msg'] ?? 'Error while getting tags, please try again later.';
+        if (200 == responseCode) {
+          final responseData = response['data'] as List<dynamic>;
+          responseData.forEach((dataItem) {
+            TagModel tagModel = TagModel(
+              id: dataItem['tag_id'],
+              createTime: dataItem['create_time'],
+              updateTime: dataItem['update_time'],
+              name: dataItem['name'],
+              icon: dataItem['icon'],
+              color: dataItem['color'],
+              extra: dataItem['extra'],
+              sort: dataItem['sort'],
+            );
+            tagModelList.add(tagModel);
+          });
+          onSuccess?.call(tagModelList);
+        } else {
+          onFail?.call(responseCode, responseMessage);
+        }
       },
       onFail: (dynamic){
         LogManager.d('get tag list by network failed. err -> $dynamic', TAG);
+        onFail?.call(0, 'Network connection failed.');
       }
     );
   }
