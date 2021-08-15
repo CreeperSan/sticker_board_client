@@ -16,6 +16,10 @@ dependencies:
     path: ../../base/network
   log:
     path: ../../base/log
+  ui_lib:
+    path: ../../base/ui_lib
+  toast:
+    path: ../../base/toast
   provider: ^5.0.0
 
 dev_dependencies:

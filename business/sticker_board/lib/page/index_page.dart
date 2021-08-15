@@ -1,6 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sticker_board/enum/network_loading_state.dart';
+import 'package:sticker_board/model/page/category_add_page_result_model.dart';
+import 'package:sticker_board/model/page/tag_add_page_result_model.dart';
 import 'package:sticker_board/module/index_module.dart';
 import 'package:sticker_board/operator/tag_operator.dart';
 import 'package:sticker_board/widget/category_widget.dart';
@@ -8,6 +11,9 @@ import 'package:sticker_board/widget/drawer_group_widget.dart';
 import 'package:sticker_board/widget/drawer_hint_widget.dart';
 import 'package:sticker_board/widget/tag_widget.dart';
 import 'package:sticker_board_api/model/tag_model.dart';
+import 'package:sticker_board_api/sticker_board_api.dart';
+import 'package:log/log.dart';
+import 'package:sticker_board/widget/drawer_item_widget.dart';
 
 class IndexPage extends StatefulWidget{
 
@@ -19,19 +25,23 @@ class IndexPage extends StatefulWidget{
 }
 
 class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
+  static const TAG = '_IndexPageState';
+
   late IndexModule _indexModule;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addObserver(this);
-    WidgetsBinding.instance?.addPostFrameCallback(onInitStateFirstFrameCallback);
 
     _indexModule = IndexModule();
+
+    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance?.addPostFrameCallback(onInitStateFirstFrameCallback);
   }
 
   void onInitStateFirstFrameCallback(Duration timestamp){
-
+    _indexModule.loadTag();
+    _indexModule.loadCategory();
   }
 
   @override
@@ -40,7 +50,29 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
     WidgetsBinding.instance?.removeObserver(this);
   }
 
-  Widget _buildCategory(){
+  Widget _buildDrawerCommonGroup(){
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        DrawerGroupWidget(
+          name: 'Sticker Board',
+          state: NetworkLoadingState.Idle,
+        ),
+        DrawerItemWidget(
+          icon: Icon(Icons.inbox),
+          name: 'All',
+          onPressed: _onStickerBoardAllPressed,
+        ),
+        DrawerItemWidget(
+          icon: Icon(Icons.archive),
+          name: 'Archive',
+          onPressed: _onStickerBoardArchivePressed,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDrawerCategoryGroup(){
     return Consumer<IndexModule>(
       builder: (consumerContext, module, child){
         List<Widget> categoryWidgetList = [];
@@ -48,7 +80,7 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
           name: 'Category',
           state: module.categoryLoadingState,
           onRefreshPress: () => module.loadCategory(),
-          onAddPress: _onAddCategoryPressed,
+          onAddPress: () => _onAddCategoryPressed(module),
         ));
         final categoryList = module.categoryList;
         if(categoryList.isEmpty){
@@ -57,7 +89,10 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
           ));
         } else {
           module.categoryList.forEach((element) {
-            categoryWidgetList.add(CategoryWidget(element));
+            categoryWidgetList.add(CategoryWidget(element,
+              onPressed: _onCategoryPressed,
+              onLongPressed: _onCategoryLongPressed,
+            ));
           });
         }
         return Column(
@@ -68,7 +103,7 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
     );
   }
 
-  Widget _buildTag(){
+  Widget _buildDrawerTagGroup(){
     return Consumer<IndexModule>(
       builder: (consumerContext, module, child){
         List<Widget> tagWidgetList = [];
@@ -76,7 +111,7 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
           name: 'Tag',
           state: module.tagLoadingState,
           onRefreshPress: () => module.loadTag(),
-          onAddPress: _onAddTagPressed,
+          onAddPress: () => _onAddTagPressed(module),
         ));
         final tagList = module.tagList;
         if(tagList.isEmpty){
@@ -85,7 +120,10 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
           ));
         } else {
           module.tagList.forEach((element) {
-            tagWidgetList.add(TagWidget(element));
+            tagWidgetList.add(TagWidget(element,
+              onPressed: _onTagPressed,
+              onLongPressed: _onTagLongPressed,
+            ));
           });
         }
         return Column(
@@ -122,8 +160,9 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
-                  _buildCategory(),
-                  _buildTag(),
+                  _buildDrawerCommonGroup(),
+                  _buildDrawerCategoryGroup(),
+                  _buildDrawerTagGroup(),
                 ],
               ),
             ),
@@ -134,16 +173,53 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
   }
 
 
-  void _onAddTagPressed(){
-    Navigator.pushNamed(context, '/sticker_board/tag/add');
+  void _onAddTagPressed(IndexModule module){
+    Navigator.pushNamed(context, '/sticker_board/tag/add').then((response){
+      if(response is TagAddPageResultModel){
+        if(response.isSuccess){
+          module.loadTag();
+        }
+      }
+    });
   }
 
-  void _onAddCategoryPressed(){
-    Navigator.pushNamed(context, '/sticker_board/category/add');
+  void _onAddCategoryPressed(IndexModule module){
+    Navigator.pushNamed(context, '/sticker_board/category/add').then((response){
+      if(response is CategoryAddPageResultModel){
+        if(response.isSuccess){
+          module.loadCategory();
+        }
+      }
+    });
   }
 
+  void _onCategoryPressed(CategoryModel categoryModel){
+    LogManager.d('Category has been pressed. category=$categoryModel', TAG);
+  }
 
-  IndexModule get watchIndexModule => context.watch<IndexModule>();
-  IndexModule get readIndexModule => context.read<IndexModule>();
+  void _onCategoryLongPressed(CategoryModel categoryModel){
+    LogManager.d('Category has been long pressed. category=$categoryModel', TAG);
+
+  }
+
+  void _onTagPressed(TagModel tagModel){
+    LogManager.d('Tag has been pressed. category=$tagModel', TAG);
+
+  }
+
+  void _onTagLongPressed(TagModel tagModel){
+    LogManager.d('Tag has been pressed. category=$tagModel', TAG);
+
+  }
+
+  void _onStickerBoardAllPressed(){
+    LogManager.d('All sticker board has been pressed.', TAG);
+
+  }
+
+  void _onStickerBoardArchivePressed(){
+    LogManager.d('Archive sticker board has been pressed.', TAG);
+
+  }
 
 }

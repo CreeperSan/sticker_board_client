@@ -22,4 +22,9 @@ class CategoryModel {
     required this.sort,
   });
 
+  @override
+  String toString() {
+    return 'Category(id=$id, name=$name)';
+  }
+
 }
