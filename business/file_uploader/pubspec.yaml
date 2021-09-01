@@ -1,0 +1,30 @@
+name: file_uploader
+description: A new Flutter package project.
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  network:
+    path: ../../base/network
+  log:
+    path: ../../base/log
+  kv_storage:
+    path: ../../base/kv_storage
+  device_information:
+    path: ../../base/device_information
+  lifecycle:
+    path: ../../base/lifecycle
+
+flutter:
+
+

@@ -14,7 +14,7 @@ class LifecycleNotifier {
 
   void fire(Lifecycle lifecycle){
     _data[lifecycle]?.forEach((element) {
-      element.onEvent(lifecycle);
+      element.onEvent?.call(lifecycle);
     });
   }
 
@@ -26,14 +26,14 @@ class LifecycleNotifier {
       _data[lifecycle]?.add(subscriber);
     }
 
-    subscriber.onSubscribe(lifecycle);
+    subscriber.onSubscribe?.call(lifecycle);
   }
 
   void unsubscribe(LifecycleSubscriber subscriber){
     final lifecycle = subscriber.lifecycle;
     _data[lifecycle]?.remove(subscriber);
 
-    subscriber.onUnsubscribe(lifecycle);
+    subscriber.onUnsubscribe?.call(lifecycle);
   }
 
 }

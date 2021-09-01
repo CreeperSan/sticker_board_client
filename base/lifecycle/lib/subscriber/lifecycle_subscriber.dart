@@ -1,16 +1,20 @@
 
 import 'package:lifecycle/enum/lifecycle.dart';
 
-abstract class LifecycleSubscriber {
+class LifecycleSubscriber {
   final Lifecycle lifecycle;
 
-  LifecycleSubscriber(this.lifecycle);
+  LifecycleSubscriber(this.lifecycle ,{
+    this.onSubscribe,
+    this.onUnsubscribe,
+    this.onEvent,
+  });
 
-  void onSubscribe(Lifecycle lifecycle);
+  void Function(Lifecycle lifecycle)? onSubscribe;
 
-  void onUnsubscribe(Lifecycle lifecycle);
+  void Function(Lifecycle lifecycle)? onUnsubscribe;
 
-  void onEvent(Lifecycle lifecycle);
+  void Function(Lifecycle lifecycle)? onEvent;
 
 }
 

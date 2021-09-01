@@ -20,8 +20,8 @@ class PrefsManager {
   static PrefsManager instance = PrefsManager._();
 
   // current login user id
-  int get uid => KVStorageManager.getInt(Prefs.UID, 0);
-  set uid(int uid) => KVStorageManager.setInt(Prefs.UID, uid);
+  String get uid => KVStorageManager.getString(Prefs.UID, '');
+  set uid(String uid) => KVStorageManager.setString(Prefs.UID, uid);
 
   // current login user token
   String get token => KVStorageManager.getString(Prefs.Token, '');

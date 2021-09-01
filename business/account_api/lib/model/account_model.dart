@@ -7,7 +7,7 @@ class AccountModel{
   String machineCode;
   String token;
   int effectTime;
-  int uid;
+  String uid;
 
   AccountModel({
     required this.account,

@@ -72,7 +72,7 @@ class AccountOperator extends AccountInterface {
         if(code == 200){
           final token = result?['data']?['token']?.toString() ?? '';
           final effectiveTime = int.tryParse(result?['data']?['effective_time']?.toString() ?? '') ?? 0;
-          final uid = int.tryParse(result?['data']?['uid']?.toString() ?? '') ?? 0;
+          final uid = result?['data']?['uid']?.toString() ?? '';
           onSuccess?.call(AccountModel(
             account: account,
             platform: platform,

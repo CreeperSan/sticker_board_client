@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
 import 'package:device_information/device_information.dart';
+import 'package:network/network.dart';
 import 'package:toast/toast.dart';
 
 class LoginPage extends StatefulWidget{
@@ -77,6 +78,14 @@ class _LoginPageState extends State<LoginPage>{
               ),
               onPressed: _triggerRegister,
             ),
+            CupertinoButton(
+              child: Text('Test OSS Upload',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              onPressed: _testOSSUploadPressed,
+            ),
           ],
         ),
       ),
@@ -103,7 +112,7 @@ class _LoginPageState extends State<LoginPage>{
     AccountOperator.instance.login(
       // account: accountStr,
       // password: passwordStr,
-      account: 'creepersan',
+      account: 'account_01',
       password: 'Aa888888',
       platform: DeviceInformation.platform,
       brand: DeviceInformation.brand,
@@ -129,6 +138,10 @@ class _LoginPageState extends State<LoginPage>{
 
   void _triggerRegister(){
     Navigator.pushNamed(context, '/account/register');
+  }
+
+  void _testOSSUploadPressed(){
+    NetworkManager.instance.testMethod();
   }
 
 }

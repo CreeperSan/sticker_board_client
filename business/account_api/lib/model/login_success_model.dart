@@ -4,7 +4,7 @@ class LoginSuccessModel{
   String password;
   String token;
   int effectTime;
-  int uid;
+  String uid;
 
   LoginSuccessModel({
     required this.account,
