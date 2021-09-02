@@ -41,8 +41,43 @@ class AccountOperator extends AccountInterface {
 
 
   @override
-  Future authToken() {
-    throw UnimplementedError();
+  Future authToken({
+    required String token,
+    required String uid,
+    required int platform,
+    required String brand,
+    required String deviceName,
+    required String machineCode,
+    void Function()? onAuthSuccess,
+    void Function()? onAuthFailTokenExpired,
+    void Function()? onAuthFailOther,
+  }) {
+    NetworkManager.instance.fetch('http://localhost:8080/api/account/v1/auth_token',
+      requestMethod: RequestMethod.Post,
+      header: {
+        'sticker-board-version-code' : '1',
+        'sticker-board-uid' : uid,
+        'sticker-board-platform' : platform,
+        'sticker-board-machine-code' :machineCode,
+        'sticker-board-device-name' : deviceName,
+        'sticker-board-brand' : brand,
+        'sticker-board-token' : token,
+      },
+      onSuccess: (response){
+        print(response);
+        print(response.runtimeType);
+        if(response['code'] == 200){
+          onAuthSuccess?.call();
+        } else {
+          onAuthFailTokenExpired?.call();
+        }
+      },
+      onFail: (error){
+        print(error);
+        onAuthFailOther?.call();
+      }
+    );
+    return Future.value();
   }
 
   @override

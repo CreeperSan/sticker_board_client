@@ -28,8 +28,17 @@ class StickerBoardApplication extends StatelessWidget {
   static const TAG = 'StickerBoardApplication';
 
   StickerBoardApplication(){
+
+    _init();
+
+  }
+
+  void _init() async {
+    // https://stackoverflow.com/questions/67808814/flutter-shared-preference-unhandled-exception-null-check-operator-used-on-a
+    WidgetsFlutterBinding.ensureInitialized();
+
     // Initialize Basic Module
-    KVStorageManager.initialize();
+    await KVStorageManager.initialize();
 
     // Initialize Network
     NetworkManager.instance.setCommonHeader({
@@ -74,6 +83,10 @@ class StickerBoardApplication extends StatelessWidget {
         // Login
         RouterConst.AccountLogin : (context, [params]) => LoginPage(
           onLoginSuccess: (model) => _onLoginSuccess(context, model),
+          onAuthSuccess: () => _onLoginAuthSuccess(context),
+          onTokenExpired: () => _onLoginTokenExpired(context),
+          cachedToken: PrefsManager.instance.token,
+          cachedUID: PrefsManager.instance.uid,
         ),
         RouterConst.AccountRegister : (context, [params]) => RegisterPage(),
 
@@ -125,6 +138,15 @@ class StickerBoardApplication extends StatelessWidget {
     Navigator.pushReplacementNamed(context, RouterConst.StickerBoardIndex);
 
     LifecycleNotifier.instance.fire(Lifecycle.OnLogin);
+  }
+
+  void _onLoginAuthSuccess(BuildContext context){
+    Navigator.pushReplacementNamed(context, RouterConst.StickerBoardIndex);
+  }
+
+  void _onLoginTokenExpired(BuildContext context){
+    PrefsManager.instance.uid = '';
+    PrefsManager.instance.token = '';
   }
 
 }

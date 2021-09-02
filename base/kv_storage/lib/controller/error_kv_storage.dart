@@ -47,6 +47,9 @@ class ErrorKVStorage extends IKVStorage {
     _data[key] = value;
   }
 
-
+  @override
+  void remove(String key) {
+    _data.remove(key);
+  }
 
 }

@@ -12,8 +12,8 @@ class KVStorageManager{
   static Future<bool> initialize() async {
     try {
       final spStorage = SharedPreferencesKVStorage();
-      final initializeResult = await spStorage.initialize();
-      if(initializeResult){
+      final initializeSuccess = await spStorage.initialize();
+      if(!initializeSuccess){
         throw Exception('KVStorage initialize error.');
       }
       _storage = spStorage;
@@ -61,6 +61,9 @@ class KVStorageManager{
     return _storage?.getString(key, value) ?? value;
   }
 
+  static void remove(String key){
+    _storage?.remove(key);
+  }
 
 }
 

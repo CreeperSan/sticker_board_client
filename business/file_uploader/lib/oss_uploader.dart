@@ -70,7 +70,7 @@ class OSSUploader {
         }
 
         final uploadFormParams = {
-          'key' : dir + DateTime.now().millisecondsSinceEpoch.toString() + file.absolute.,
+          'key' : dir + DateTime.now().millisecondsSinceEpoch.toString() + fileName,
           'policy': policy,
           'OSSAccessKeyId': accessID,
           'success_action_status' : '200', //让服务端返回200,不然，默认会返回204

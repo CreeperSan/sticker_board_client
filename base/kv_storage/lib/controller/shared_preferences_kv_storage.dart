@@ -1,4 +1,5 @@
 
+import 'package:flutter/material.dart';
 import 'package:kv_storage/interface/i_kv_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,5 +61,9 @@ class SharedPreferencesKVStorage extends IKVStorage {
     _prefs.setString(key, value);
   }
 
+  @override
+  void remove(String key) {
+    _prefs.remove(key);
+  }
 
 }

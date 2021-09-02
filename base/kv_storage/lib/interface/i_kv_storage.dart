@@ -23,4 +23,7 @@ abstract class IKVStorage {
 
   void setDouble(String key, double value);
 
+
+  void remove(String key);
+
 }

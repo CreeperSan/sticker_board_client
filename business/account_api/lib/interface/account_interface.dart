@@ -24,7 +24,17 @@ abstract class AccountInterface{
     required String email,
   });
 
-  Future<dynamic> authToken();
+  Future<dynamic> authToken({
+    required String token,
+    required String uid,
+    required int platform,
+    required String brand,
+    required String deviceName,
+    required String machineCode,
+    void Function()? onAuthSuccess,
+    void Function()? onAuthFailTokenExpired,
+    void Function()? onAuthFailOther,
+  });
 
   // Get Current Login Info
 
