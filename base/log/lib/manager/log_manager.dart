@@ -15,20 +15,20 @@ class LogManager {
     return true;
   }
 
-  static void d(String content, String tag){
-    _logger?.d(content, tag);
+  static void d(dynamic content, dynamic tag){
+    _logger?.d(content.toString(), tag.toString());
   }
 
-  static void i(String content, String tag){
-    _logger?.i(content, tag);
+  static void i(dynamic content, dynamic tag){
+    _logger?.i(content.toString(), tag.toString());
   }
 
-  static void w(String content, String tag){
-    _logger?.w(content, tag);
+  static void w(dynamic content, dynamic tag){
+    _logger?.w(content.toString(), tag.toString());
   }
 
-  static void e(String content, String tag){
-    _logger?.e(content, tag);
+  static void e(dynamic content, dynamic tag){
+    _logger?.e(content.toString(), tag.toString());
   }
 
 }

@@ -1,11 +1,16 @@
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:network/enum/request_method.dart';
+import 'package:network/manager/network_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:sticker_board/enum/network_loading_state.dart';
 import 'package:sticker_board/model/page/category_add_page_result_model.dart';
 import 'package:sticker_board/model/page/tag_add_page_result_model.dart';
 import 'package:sticker_board/module/index_module.dart';
 import 'package:sticker_board/operator/tag_operator.dart';
+import 'package:sticker_board/page/sticker_type_select_to_create_page.dart';
 import 'package:sticker_board/widget/category_widget.dart';
 import 'package:sticker_board/widget/drawer_group_widget.dart';
 import 'package:sticker_board/widget/drawer_hint_widget.dart';
@@ -15,6 +20,7 @@ import 'package:sticker_board_api/model/tag_model.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
 import 'package:log/log.dart';
 import 'package:sticker_board/widget/drawer_item_widget.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class IndexPage extends StatefulWidget{
 
@@ -85,6 +91,10 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
             ),
           ),
           body: _onBuildBody(),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add,),
+            onPressed: _onCreateStickerClicked,
+          ),
         );
       },
     );
@@ -230,24 +240,66 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
   /// The code below is about Content
 
   Widget _onBuildBody(){
-    return ListView.builder(
-      itemCount: 1,
-      itemBuilder: (itemContext, index){
-        if(index == 0){
-          return IndexCreateStickerHeaderWidget(
-            onSubmitText: _onSubmitPlainTextSticker,
-            onCreatePlainImageStickerPressed: _onCreatePlainImageStickerPressed,
-            onCreatePlainSoundStickerPressed: _onCreatePlainSoundStickerPressed,
-          );
-        }
-        return Container();
+    // This will cause stack overflow exception from StaggeredGridView when expanding the width of whe window
+    // var axisCount = max(1, MediaQuery.of(context).size.width ~/ 160);
+    var axisCount = 3;
+    return RefreshIndicator(
+      child: StaggeredGridView.countBuilder(
+        crossAxisCount: axisCount,
+        itemCount: 160,
+        itemBuilder: (itemContext, index) {
+          if(index == 0) {
+            return IndexCreateStickerHeaderWidget(
+              onMainAreaClicked: _onSubmitPlainTextSticker,
+              onImageIconClicked: _onCreatePlainImageStickerPressed,
+              onVoiceIconClicked: _onCreatePlainSoundStickerPressed,
+            );
+          } else {
+            return Container(
+              height: 30 + (index * 10) % 150 ,
+              color: Colors.cyan,
+              margin: EdgeInsets.all(16),
+              child: Center(
+                child: Text('#$index'),
+              ),
+            );
+          }
+        },
+        staggeredTileBuilder: (int index) {
+          if(index == 0){
+            return StaggeredTile.extent(axisCount, 72);
+          } else if (index == 1) {
+            return StaggeredTile.extent(2, 260);
+          } else if (index == 19) {
+            return StaggeredTile.extent(2, 260);
+          }
+          return StaggeredTile.fit(1);
+        },
+      ),
+      onRefresh: (){
+        // Test Code
+        NetworkManager.instance.fetch('http://localhost:8080/api/sticker/v1/query',
+          requestMethod: RequestMethod.Post,
+          data: {
+            'page' : 0,
+            'page_size' : 100,
+          },
+          onSuccess: (response){
+            LogManager.d('Get sticker list onSuccess:', this.runtimeType.toString());
+            LogManager.d(response, this.runtimeType.toString());
+          },
+          onFail: (onFail){
+            LogManager.d('Get sticker list onFail:', this.runtimeType.toString());
+            LogManager.d(onFail, this.runtimeType.toString());
+          }
+        );
+        return Future.delayed(Duration(seconds: 1,));
       },
     );
   }
 
-  void _onSubmitPlainTextSticker(void Function() clearTextField, String content){
-    LogManager.i('快速创建纯文字Sticker -> $content', TAG);
-    clearTextField.call();
+  void _onSubmitPlainTextSticker(){
+
   }
 
   void _onCreatePlainImageStickerPressed(){
@@ -256,6 +308,19 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
 
   void _onCreatePlainSoundStickerPressed(){
 
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// The code below is about create sticker
+
+  void _onCreateStickerClicked(){
+    // TODO replace with named router
+    Navigator.push(context, PageRouteBuilder(
+      opaque: false,
+      pageBuilder: (_, __, ___) {
+        return StickerTypeSelectToCreatePage();
+      }
+    ));
   }
 
 }

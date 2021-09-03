@@ -15,6 +15,9 @@ class IndexModule with ChangeNotifier{
   NetworkLoadingState categoryLoadingState = NetworkLoadingState.Idle;
   List<CategoryModel> categoryList = [];
 
+  NetworkLoadingState stickerLoadingState = NetworkLoadingState.Idle;
+  List<StickerModel> stickerList = [];
+
   void loadTag(){
     tagLoadingState = NetworkLoadingState.Loading;
     notifyListeners();
@@ -51,5 +54,8 @@ class IndexModule with ChangeNotifier{
     );
   }
 
+  void loadStickerModel(){
+
+  }
 
 }

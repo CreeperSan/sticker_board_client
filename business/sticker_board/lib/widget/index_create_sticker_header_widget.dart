@@ -3,16 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class IndexCreateStickerHeaderWidget extends StatelessWidget {
-  final void Function(void Function() clearAction, String content)? onSubmitText;
-  final void Function()? onCreatePlainImageStickerPressed;
-  final void Function()? onCreatePlainSoundStickerPressed;
+  final void Function()? onMainAreaClicked;
+  final void Function()? onImageIconClicked;
+  final void Function()? onVoiceIconClicked;
 
   final TextEditingController _controller = TextEditingController();
 
   IndexCreateStickerHeaderWidget({
-    this.onSubmitText,
-    this.onCreatePlainImageStickerPressed,
-    this.onCreatePlainSoundStickerPressed,
+    this.onMainAreaClicked,
+    this.onImageIconClicked,
+    this.onVoiceIconClicked,
   });
 
   @override
@@ -43,36 +43,30 @@ class IndexCreateStickerHeaderWidget extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Write down a note...',
+              child: GestureDetector(
+                onTap: onMainAreaClicked,
+                child: Text('Write down a note...',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
+                  ),
                 ),
-                textInputAction: TextInputAction.done,
-                controller: _controller,
-                onSubmitted: _onSubmittedText,
               ),
             ),
             IconButton(
               color: Colors.grey,
               icon: Icon(Icons.image),
-              onPressed: onCreatePlainImageStickerPressed,
+              onPressed: onImageIconClicked,
             ),
             IconButton(
               color: Colors.grey,
               icon: Icon(Icons.keyboard_voice),
-              onPressed: onCreatePlainSoundStickerPressed,
+              onPressed: onVoiceIconClicked,
             ),
           ],
         ),
       ),
     );
-  }
-
-  void _onSubmittedText(String content){
-    onSubmitText?.call((){
-      _controller.clear();
-    }, content);
   }
 
 }

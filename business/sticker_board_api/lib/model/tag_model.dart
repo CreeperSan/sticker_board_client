@@ -20,5 +20,9 @@ class TagModel {
     required this.sort,
   });
 
+  @override
+  String toString() {
+    return 'TagModel(id=$id, name=$name)';
+  }
 
 }
