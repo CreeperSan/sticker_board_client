@@ -43,14 +43,14 @@ class TagOperator extends TagInterface{
           final responseData = response['data'] as List<dynamic>;
           responseData.forEach((dataItem) {
             TagModel tagModel = TagModel(
-              id: dataItem['tag_id'],
-              createTime: dataItem['create_time'],
-              updateTime: dataItem['update_time'],
-              name: dataItem['name'],
-              icon: dataItem['icon'],
-              color: dataItem['color'],
-              extra: dataItem['extra'],
-              sort: dataItem['sort'],
+              id: dataItem['tag_id'] ?? '',
+              createTime: dataItem['create_time'] ?? 0,
+              updateTime: dataItem['update_time'] ?? 0,
+              name: dataItem['name'] ?? '',
+              icon: dataItem['icon'] ?? '',
+              color: dataItem['color'] ?? 0,
+              extra: dataItem['extra'] ?? '',
+              sort: dataItem['sort'] ?? 10000,
             );
             tagModelList.add(tagModel);
           });

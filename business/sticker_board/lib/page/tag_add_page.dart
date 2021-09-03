@@ -57,7 +57,7 @@ class _TagAddPageState extends State<TagAddPage>{
                   Consumer<TagAddModule>(
                     builder: (consumerContext, module, child){
                       return module.tagAddNetworkState == NetworkLoadingState.Loading ? CupertinoActivityIndicator() : StickerBoardActionButton(
-                        name: 'Create Category',
+                        name: 'Create Tag',
                         onPressed: () => _onCreateTagPressed(module),
                       );
                     },

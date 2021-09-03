@@ -9,6 +9,7 @@ import 'package:sticker_board/operator/tag_operator.dart';
 import 'package:sticker_board/widget/category_widget.dart';
 import 'package:sticker_board/widget/drawer_group_widget.dart';
 import 'package:sticker_board/widget/drawer_hint_widget.dart';
+import 'package:sticker_board/widget/index_create_sticker_header_widget.dart';
 import 'package:sticker_board/widget/tag_widget.dart';
 import 'package:sticker_board_api/model/tag_model.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
@@ -49,6 +50,48 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
     super.dispose();
     WidgetsBinding.instance?.removeObserver(this);
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<IndexModule>.value(
+      value: _indexModule,
+      builder: (providerContext, child){
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Sticker Board'),
+          ),
+          drawer: Drawer(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  DrawerHeader(
+                    decoration: BoxDecoration(
+                      color: Colors.lightBlue,
+                    ),
+                    child: Center(
+                      child: Text('Sticker Board',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 26,
+                        ),
+                      ),
+                    ),
+                  ),
+                  _buildDrawerCommonGroup(),
+                  _buildDrawerCategoryGroup(),
+                  _buildDrawerTagGroup(),
+                ],
+              ),
+            ),
+          ),
+          body: _onBuildBody(),
+        );
+      },
+    );
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// The code below is about Drawer
 
   Widget _buildDrawerCommonGroup(){
     return Column(
@@ -134,45 +177,6 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<IndexModule>.value(
-      value: _indexModule,
-      builder: (providerContext, child){
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Sticker Board'),
-          ),
-          drawer: Drawer(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  DrawerHeader(
-                    decoration: BoxDecoration(
-                      color: Colors.lightBlue,
-                    ),
-                    child: Center(
-                      child: Text('Sticker Board',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 26,
-                        ),
-                      ),
-                    ),
-                  ),
-                  _buildDrawerCommonGroup(),
-                  _buildDrawerCategoryGroup(),
-                  _buildDrawerTagGroup(),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-
   void _onAddTagPressed(IndexModule module){
     Navigator.pushNamed(context, '/sticker_board/tag/add').then((response){
       if(response is TagAddPageResultModel){
@@ -219,6 +223,38 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
 
   void _onStickerBoardArchivePressed(){
     LogManager.d('Archive sticker board has been pressed.', TAG);
+
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  /// The code below is about Content
+
+  Widget _onBuildBody(){
+    return ListView.builder(
+      itemCount: 1,
+      itemBuilder: (itemContext, index){
+        if(index == 0){
+          return IndexCreateStickerHeaderWidget(
+            onSubmitText: _onSubmitPlainTextSticker,
+            onCreatePlainImageStickerPressed: _onCreatePlainImageStickerPressed,
+            onCreatePlainSoundStickerPressed: _onCreatePlainSoundStickerPressed,
+          );
+        }
+        return Container();
+      },
+    );
+  }
+
+  void _onSubmitPlainTextSticker(void Function() clearTextField, String content){
+    LogManager.i('快速创建纯文字Sticker -> $content', TAG);
+    clearTextField.call();
+  }
+
+  void _onCreatePlainImageStickerPressed(){
+
+  }
+
+  void _onCreatePlainSoundStickerPressed(){
 
   }
 

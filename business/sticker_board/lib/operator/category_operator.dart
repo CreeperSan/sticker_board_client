@@ -43,15 +43,15 @@ class CategoryOperator extends CategoryInterface{
             final responseData = response['data'] as List<dynamic>;
             responseData.forEach((dataItem) {
               CategoryModel categoryModel = CategoryModel(
-                parentID: dataItem['parent_id'],
-                id: dataItem['category_id'],
-                createTime: dataItem['create_time'],
-                updateTime: dataItem['update_time'],
-                name: dataItem['name'],
-                icon: dataItem['icon'],
-                color: dataItem['color'],
-                extra: dataItem['extra'],
-                sort: dataItem['sort'],
+                parentID: dataItem['parent_id'] ?? '',
+                id: dataItem['category_id'] ?? '',
+                createTime: dataItem['create_time'] ?? 0,
+                updateTime: dataItem['update_time'] ?? 0,
+                name: dataItem['name'] ?? '',
+                icon: dataItem['icon'] ?? '',
+                color: dataItem['color'] ?? 0,
+                extra: dataItem['extra'] ?? '',
+                sort: dataItem['sort'] ?? 10000,
               );
               categoryModelList.add(categoryModel);
             });

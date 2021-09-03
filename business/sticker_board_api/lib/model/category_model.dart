@@ -1,7 +1,7 @@
 
 class CategoryModel {
-  int id;
-  int parentID;
+  String id;
+  String parentID;
   String name;
   int createTime;
   int updateTime;

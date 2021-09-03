@@ -141,6 +141,7 @@ class StickerBoardApplication extends StatelessWidget {
   }
 
   void _onLoginAuthSuccess(BuildContext context){
+    LogManager.i('Account token auth success.', TAG);
     Navigator.pushReplacementNamed(context, RouterConst.StickerBoardIndex);
   }
 

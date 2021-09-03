@@ -1,6 +1,6 @@
 
 class TagModel {
-  int id;
+  String id;
   int createTime;
   int updateTime;
   String name;
