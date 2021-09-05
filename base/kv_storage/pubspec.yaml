@@ -10,7 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.0.6
+  third_libs:
+    path: ../third_libs
 
 dev_dependencies:
   flutter_test:

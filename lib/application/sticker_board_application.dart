@@ -61,6 +61,9 @@ class StickerBoardApplication extends StatelessWidget {
     CategoryManager.install(CategoryOperator.instance);
     StickerBoardManager.install(StickerBoardOperator.instance);
 
+    KVStorageManager.remove('app_current_uid');
+    KVStorageManager.remove('app_current_token');
+
   }
 
   @override
