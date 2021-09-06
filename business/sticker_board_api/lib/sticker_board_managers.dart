@@ -17,6 +17,14 @@ class TagManager{
     _instance = null;
   }
 
+  static TagInterface get instance {
+    final tmpInstance = _instance;
+    if(tmpInstance == null){
+      throw Exception('Tag has not been install yet!');
+    }
+    return tmpInstance;
+  }
+
 }
 
 
@@ -34,6 +42,14 @@ class CategoryManager{
     _instance = null;
   }
 
+  static CategoryInterface get instance {
+    final tmpInstance = _instance;
+    if(tmpInstance == null){
+      throw Exception('Category has not been install yet!');
+    }
+    return tmpInstance;
+  }
+
 }
 
 
@@ -49,6 +65,14 @@ class StickerBoardManager{
 
   static void uninstall(){
     _instance = null;
+  }
+
+  static StickerBoardInterface get instance {
+    final tmpInstance = _instance;
+    if(tmpInstance == null){
+      throw Exception('Sticker has not been install yet!');
+    }
+    return tmpInstance;
   }
 
 }

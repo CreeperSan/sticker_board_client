@@ -2,6 +2,7 @@ import 'package:log/log.dart';
 import 'package:network/enum/request_method.dart';
 import 'package:network/manager/network_manager.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
+import 'package:url_builder/url_builder.dart';
 
 class TagOperator extends TagInterface{
   static const TAG = "TagOperator";
@@ -32,7 +33,7 @@ class TagOperator extends TagInterface{
     void Function(List<TagModel> tagList)? onSuccess,
     void Function(int code, String message)? onFail
   }) {
-    NetworkManager.instance.fetch('http://localhost:8080/api/tag/v1/list',
+    NetworkManager.instance.fetch(URLBuilder.stickerListTag(),
       requestMethod: RequestMethod.Post,
       onSuccess: (response){
         LogManager.d('get tag list by network finish. response -> $response', TAG);

@@ -9,6 +9,7 @@ import 'package:account/account.dart';
 import 'package:sticker_board_client/const/router_const.dart';
 import 'package:sticker_board_client/manager/prefs_manager.dart';
 import 'package:toast/manager/toast_manager.dart';
+import 'package:url_builder/url_builder.dart';
 import 'package:version/version.dart';
 import 'package:splash_screen/splash_screen.dart';
 import 'package:sticker_board/sticker_board.dart' as StickerBoard;
@@ -61,8 +62,9 @@ class StickerBoardApplication extends StatelessWidget {
     CategoryManager.install(CategoryOperator.instance);
     StickerBoardManager.install(StickerBoardOperator.instance);
 
-    KVStorageManager.remove('app_current_uid');
-    KVStorageManager.remove('app_current_token');
+    // KVStorageManager.remove('app_current_uid');
+    // KVStorageManager.remove('app_current_token');
+    URLBuilder.setHostAddress('http://localhost:8080');
 
   }
 

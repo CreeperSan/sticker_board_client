@@ -44,6 +44,8 @@ dependencies:
     path: business/sticker_board_api
   file_uploader:
     path: business/file_uploader
+  url_builder:
+    path: business/url_builder
 
 dev_dependencies:
   flutter_test:

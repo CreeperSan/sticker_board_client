@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:account_api/account_api.dart';
 import 'package:network/network.dart';
 import 'package:log/log.dart';
+import 'package:url_builder/builder/url_builder.dart';
 
 class AccountOperator extends AccountInterface {
   static const TAG = 'AccountOperation';
@@ -52,7 +53,7 @@ class AccountOperator extends AccountInterface {
     void Function()? onAuthFailTokenExpired,
     void Function()? onAuthFailOther,
   }) {
-    NetworkManager.instance.fetch('http://localhost:8080/api/account/v1/auth_token',
+    NetworkManager.instance.fetch(URLBuilder.accountAuthToken(),
       requestMethod: RequestMethod.Post,
       header: {
         'sticker-board-version-code' : '1',
@@ -91,7 +92,7 @@ class AccountOperator extends AccountInterface {
     void Function(AccountModel accountModel)? onSuccess,
     void Function(int code, String message)? onFail,
   }) {
-    NetworkManager().fetch('http://localhost:8080/api/account/v1/login',
+    NetworkManager().fetch(URLBuilder.accountLogin(),
       requestMethod: RequestMethod.Post,
       data: {
         "account" : account,

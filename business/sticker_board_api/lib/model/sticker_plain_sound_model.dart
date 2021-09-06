@@ -4,7 +4,7 @@ import 'package:sticker_board_api/model/sticker_model.dart';
 class StickerPlainSoundModel extends StickerModel{
   int duration;
   String description;
-  String imagePath;
+  String url;
 
   StickerPlainSoundModel({
     required String id,
@@ -19,7 +19,7 @@ class StickerPlainSoundModel extends StickerModel{
     required String title,
     required this.duration,
     required this.description,
-    required this.imagePath,
+    required this.url,
   }) : super (
     id: id,
     status: status,

@@ -46,6 +46,7 @@ class NetworkManager {
     void Function(int count, int total)? onSendProgress,
     void Function(int count, int total)? onReceiveProgress,
   }){
+    print('Network Request -> URL=$url');
     CancelToken cancelToken = CancelToken();
     switch(requestMethod){
       case RequestMethod.Get: {
@@ -130,7 +131,7 @@ class NetworkManager {
   //         'key' : dir + 'rock.jpg',
   //         'policy': policy,
   //         'OSSAccessKeyId': accessID,
-  //         'success_action_status' : '200', //让服务端返回200,不然，默认会返回204
+  //         'success_action_status' : '200', //Make server return 200 or else server will return 204 by default
   //         'callback' : callback,
   //         'signature': signature,
   //         'contentType': 'multipart/form-data',

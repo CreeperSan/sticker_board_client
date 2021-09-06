@@ -27,6 +27,8 @@ dependencies:
     path: ../../base/ui_lib
   account_api:
     path: ../account_api
+  url_builder:
+    path: ../url_builder
 
 dev_dependencies:
   flutter_test:

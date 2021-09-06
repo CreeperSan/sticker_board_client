@@ -22,6 +22,8 @@ dependencies:
     path: ../../base/toast
   third_libs:
     path: ../../base/third_libs
+  url_builder:
+    path: ../url_builder
 
 dev_dependencies:
   flutter_test:

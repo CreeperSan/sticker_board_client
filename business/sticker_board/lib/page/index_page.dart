@@ -9,6 +9,7 @@ import 'package:sticker_board/enum/network_loading_state.dart';
 import 'package:sticker_board/model/page/category_add_page_result_model.dart';
 import 'package:sticker_board/model/page/tag_add_page_result_model.dart';
 import 'package:sticker_board/module/index_module.dart';
+import 'package:sticker_board/operator/sticker_board_operator.dart';
 import 'package:sticker_board/operator/tag_operator.dart';
 import 'package:sticker_board/page/sticker_type_select_to_create_page.dart';
 import 'package:sticker_board/widget/category_widget.dart';
@@ -21,6 +22,7 @@ import 'package:sticker_board_api/sticker_board_api.dart';
 import 'package:log/log.dart';
 import 'package:sticker_board/widget/drawer_item_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:sticker_board_api/sticker_board_managers.dart';
 
 class IndexPage extends StatefulWidget{
 
@@ -278,20 +280,13 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
       ),
       onRefresh: (){
         // Test Code
-        NetworkManager.instance.fetch('http://localhost:8080/api/sticker/v1/query',
-          requestMethod: RequestMethod.Post,
-          data: {
-            'page' : 0,
-            'page_size' : 100,
+        StickerBoardManager.instance.queryStickerList(0, 100,
+          onSuccess: (stickerList){
+            print('Get sticker success, result=$stickerList');
           },
-          onSuccess: (response){
-            LogManager.d('Get sticker list onSuccess:', this.runtimeType.toString());
-            LogManager.d(response, this.runtimeType.toString());
+          onFail: (code, message){
+            print('Get sticker Fail! code=$code message=$message');
           },
-          onFail: (onFail){
-            LogManager.d('Get sticker list onFail:', this.runtimeType.toString());
-            LogManager.d(onFail, this.runtimeType.toString());
-          }
         );
         return Future.delayed(Duration(seconds: 1,));
       },

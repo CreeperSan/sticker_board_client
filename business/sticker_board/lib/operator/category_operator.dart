@@ -2,6 +2,7 @@
 import 'package:network/network.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
 import 'package:log/log.dart';
+import 'package:url_builder/url_builder.dart';
 
 class CategoryOperator extends CategoryInterface{
   static const TAG = "TagOperator";
@@ -32,7 +33,7 @@ class CategoryOperator extends CategoryInterface{
     void Function(List<CategoryModel> categoryList)? onSuccess,
     void Function(int code, String message)? onFail,
   }) {
-    NetworkManager.instance.fetch('http://localhost:8080/api/category/v1/list',
+    NetworkManager.instance.fetch(URLBuilder.stickerListCategory(),
         requestMethod: RequestMethod.Post,
         onSuccess: (response){
           LogManager.d('get category list by network finish. response -> $response', TAG);
