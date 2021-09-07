@@ -1,3 +1,3 @@
 library file_uploader;
 
-export 'oss_uploader.dart';
+export 'package:file_uploader/oss_uploader.dart';

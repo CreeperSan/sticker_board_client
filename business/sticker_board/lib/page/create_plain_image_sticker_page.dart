@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:file_uploader/file_uploader.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
+import 'package:network/manager/network_manager.dart';
 import 'package:toast/manager/toast_manager.dart';
 import 'package:formatter/formatter.dart';
+import 'package:kv_storage/kv_storage.dart';
 
 class CreatePlainImageStickerPage extends StatefulWidget {
 
@@ -112,9 +115,23 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
       ToastManager.show('The file has been deleted, please choose another file.');
       return;
     }
-    // 1. Request an signature from server
-
-    // 2. Upload to OSS
+    // 1. Upload file to file server
+    final uid = KVStorageManager.getString('app_current_uid', '');   // TODO : SHOULD DEFINE THIS KEY IN COMMON WORKSPACE
+    final token = KVStorageManager.getString('app_current_token', ''); // TODO : SHOULD DEFINE THIS KEY IN COMMON WORKSPACE
+    if(uid.isEmpty || token.isEmpty){
+      ToastManager.show('Login expired. Please login again.');
+      return;
+    }
+    ToastManager.show('Uploading...');
+    OSSUploader.instance.uploadFile(file, uid, token,
+      onSuccess: (){
+        // 2. Add sticker to server
+        ToastManager.show('Upload file finish');
+      },
+      onFail: (code, message){
+        ToastManager.show(message);
+      },
+    );
 
   }
 

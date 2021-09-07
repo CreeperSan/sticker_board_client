@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:lifecycle/lifecycle.dart';
 import 'package:network/network.dart';
 import 'package:device_information/device_information.dart';
+import 'package:url_builder/url_builder.dart';
+import 'package:formatter/formatter.dart';
 
 class OSSUploader {
 
@@ -34,16 +36,18 @@ class OSSUploader {
     ));
   }
 
-  //
-
-  void uploadFile(File file, String uid, String token){
-    if(!_isCanUpload){
-      return;
-    }
+  // TODO : make this method return a Future
+  void uploadFile(File file, String uid, String token,{
+    void Function()? onSuccess,
+    void Function(int code, String message)? onFail,
+  }){
+    // if(!_isCanUpload){
+    //   return;
+    // }
     // 1. Get key from server
-    NetworkManager.instance.fetch('http://localhost:8080/api/oss/v1/get_signature',
+    NetworkManager.instance.fetch(URLBuilder.ossGetSignature(),
       header: {
-        'sticker-board-version-code' : '1',
+        'sticker-board-version-code' : '1', // TODO : fix this value later
         'sticker-board-uid' : uid,
         'sticker-board-platform' : DeviceInformation.platform,
         'sticker-board-machine-code' :DeviceInformation.machineCode,
@@ -60,43 +64,40 @@ class OSSUploader {
         final dir = signatureResult['dir'];
         final callback = signatureResult['callback'];
 
-        String fileName = 'rock.jpg';
-        String fileAbsolutePath = file.absolute.path;
-        if(fileAbsolutePath.contains('/')){
-          final splitFilePath = fileAbsolutePath.split('/');
-          if(splitFilePath.length > 0){
-            fileName = splitFilePath.last;
-          }
-        }
-
         final uploadFormParams = {
-          'key' : dir + DateTime.now().millisecondsSinceEpoch.toString() + fileName,
+          'key' : dir + DateTime.now().millisecondsSinceEpoch.toString() + '.' + file.path.pathFileExtension(),
           'policy': policy,
           'OSSAccessKeyId': accessID,
-          'success_action_status' : '200', //让服务端返回200,不然，默认会返回204
+          'success_action_status' : '200', // make oss server return 200 or else oss server will return 204 by default
           'callback' : callback,
           'signature': signature,
           'contentType': 'multipart/form-data',
           'file': MultipartFile.fromFileSync(file.path),
         };
 
+        // 2. Upload file to OSS directory
         NetworkManager.instance.fetch(host,
+          requestMethod: RequestMethod.Post,
           formData: FormData.fromMap(uploadFormParams),
           onSuccess: (response){
             print("Upload File Finish");
             print(response);
+
+            onSuccess?.call();
           },
           onFail: (error){
             print("Upload File Fail");
             print(error);
+
+            onFail?.call(0, 'Upload failed, please try again later');
           },
         );
       },
       onFail: (error){
-        print('Upload Fail');
+        print('Upload Fail, can not get signature key.');
+        onFail?.call(0, 'Upload failed, please try again later');
       },
     );
-    // 2. Upload file to OSS directory
   }
 
 }

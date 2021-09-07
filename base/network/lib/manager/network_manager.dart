@@ -38,7 +38,7 @@ class NetworkManager {
   CancelToken fetch(String url, {
     RequestMethod requestMethod = RequestMethod.Get,
     Map<String, dynamic> urlParams = const {},
-    Map<String, dynamic>? data = const {},
+    Map<String, dynamic>? data,
     FormData? formData,
     Map<String, dynamic> header = const {},
     void Function(dynamic data)? onSuccess,

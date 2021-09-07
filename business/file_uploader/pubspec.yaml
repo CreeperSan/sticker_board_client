@@ -24,6 +24,10 @@ dev_dependencies:
     path: ../../base/device_information
   lifecycle:
     path: ../../base/lifecycle
+  url_builder:
+    path: ../url_builder
+  formatter:
+    path: ../../base/formatter
 
 flutter:
 
