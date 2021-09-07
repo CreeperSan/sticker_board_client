@@ -28,6 +28,8 @@ dependencies:
     path: ../file_selector
   file_uploader:
     path: ../file_uploader
+  formatter:
+    path: ../../base/formatter
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:file_selector/const/picker_action.dart';
+import 'package:file_selector/const/selector_action.dart';
 import 'package:file_selector/model/file_model.dart';
-import 'package:file_selector/model/picker_response.dart';
+import 'package:file_selector/model/selector_response.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_selector/model/directory_model.dart';

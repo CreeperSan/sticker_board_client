@@ -1,5 +1,5 @@
 
-import 'package:file_selector/const/picker_action.dart';
+import 'package:file_selector/const/selector_action.dart';
 import 'package:file_selector/model/file_model.dart';
 
 class PickerResponse {
