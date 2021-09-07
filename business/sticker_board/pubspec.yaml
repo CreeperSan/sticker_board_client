@@ -24,6 +24,10 @@ dependencies:
     path: ../../base/third_libs
   url_builder:
     path: ../url_builder
+  file_selector:
+    path: ../file_selector
+  file_uploader:
+    path: ../file_uploader
 
 dev_dependencies:
   flutter_test:
