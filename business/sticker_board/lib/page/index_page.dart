@@ -16,6 +16,7 @@ import 'package:sticker_board/widget/category_widget.dart';
 import 'package:sticker_board/widget/drawer_group_widget.dart';
 import 'package:sticker_board/widget/drawer_hint_widget.dart';
 import 'package:sticker_board/widget/index_create_sticker_header_widget.dart';
+import 'package:sticker_board/widget/sticker/plain_text_sticker_widget.dart';
 import 'package:sticker_board/widget/tag_widget.dart';
 import 'package:sticker_board_api/model/tag_model.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
@@ -51,6 +52,7 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
   void onInitStateFirstFrameCallback(Duration timestamp){
     _indexModule.loadTag();
     _indexModule.loadCategory();
+    _indexModule.loadStickerModel();
   }
 
   @override
@@ -65,6 +67,7 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
       value: _indexModule,
       builder: (providerContext, child){
         return Scaffold(
+          backgroundColor: Color(0xFFF2F5F7),
           appBar: AppBar(
             title: Text('Sticker Board'),
           ),
@@ -242,53 +245,35 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
   /// The code below is about Content
 
   Widget _onBuildBody(){
-    // This will cause stack overflow exception from StaggeredGridView when expanding the width of whe window
-    // var axisCount = max(1, MediaQuery.of(context).size.width ~/ 160);
-    var axisCount = 3;
-    return RefreshIndicator(
-      child: StaggeredGridView.countBuilder(
-        crossAxisCount: axisCount,
-        itemCount: 160,
-        itemBuilder: (itemContext, index) {
-          if(index == 0) {
-            return IndexCreateStickerHeaderWidget(
-              onMainAreaClicked: _onSubmitPlainTextSticker,
-              onImageIconClicked: _onCreatePlainImageStickerPressed,
-              onVoiceIconClicked: _onCreatePlainSoundStickerPressed,
-            );
-          } else {
-            return Container(
-              height: 30 + (index * 10) % 150 ,
-              color: Colors.cyan,
-              margin: EdgeInsets.all(16),
-              child: Center(
-                child: Text('#$index'),
-              ),
-            );
-          }
-        },
-        staggeredTileBuilder: (int index) {
-          if(index == 0){
-            return StaggeredTile.extent(axisCount, 72);
-          } else if (index == 1) {
-            return StaggeredTile.extent(2, 260);
-          } else if (index == 19) {
-            return StaggeredTile.extent(2, 260);
-          }
-          return StaggeredTile.fit(1);
-        },
-      ),
-      onRefresh: (){
-        // Test Code
-        StickerBoardManager.instance.queryStickerList(0, 100,
-          onSuccess: (stickerList){
-            print('Get sticker success, result=$stickerList');
-          },
-          onFail: (code, message){
-            print('Get sticker Fail! code=$code message=$message');
+    return Selector<IndexModule, List<StickerModel>>(
+      selector: (selectorContext, indexModule) => indexModule.stickerList,
+      builder: (selectorContext, stickerList, child){
+        // This will cause stack overflow exception from StaggeredGridView when expanding the width of whe window
+        // var axisCount = max(1, MediaQuery.of(context).size.width ~/ 160);
+        final axisCount = 2;
+        return RefreshIndicator(
+          child: StaggeredGridView.countBuilder(
+            crossAxisCount: axisCount,
+            itemCount: stickerList.length,
+            itemBuilder: (itemContext, index) {
+              final stickerModel = stickerList[index];
+              if(stickerModel is StickerPlainTextModel){
+                return PlainTextStickerWidget(stickerModel);
+              } else {
+                return Container(
+                  child: Text('Not supported yet, please update to newest version.'),
+                );
+              }
+            },
+            staggeredTileBuilder: (int index) {
+              return StaggeredTile.fit(1);
+            },
+          ),
+          onRefresh: (){
+            _indexModule.loadStickerModel();
+            return Future.delayed(Duration(seconds: 1,));
           },
         );
-        return Future.delayed(Duration(seconds: 1,));
       },
     );
   }

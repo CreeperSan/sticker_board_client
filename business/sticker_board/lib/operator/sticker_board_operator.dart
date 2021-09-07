@@ -37,9 +37,9 @@ class StickerBoardOperator extends StickerBoardInterface{
           'page_size' : pageSize,
         },
         onSuccess: (response){
-          LogManager.d('Get sticker list onSuccess:', this.runtimeType.toString());
-          LogManager.d(response, this.runtimeType.toString());
-          LogManager.d(response.runtimeType, this.runtimeType.toString());
+          // LogManager.d('Get sticker list onSuccess:', this.runtimeType.toString());
+          // LogManager.d(response, this.runtimeType.toString());
+          // LogManager.d(response.runtimeType, this.runtimeType.toString());
           final code = response['code'] ?? 0;
           final message = response['message'] ?? 'Get stickers fail, please try again later';
           if(code != 200){
@@ -110,9 +110,10 @@ class StickerBoardOperator extends StickerBoardInterface{
           }
           onSuccess?.call(stickerModelList);
         },
-        onFail: (onFail){
+        onFail: (error){
           LogManager.d('Get sticker list onFail:', this.runtimeType.toString());
-          LogManager.d(onFail, this.runtimeType.toString());
+          LogManager.d(error, this.runtimeType.toString());
+          onFail?.call(0, 'Connection error, please try again later.');
         }
     );
   }

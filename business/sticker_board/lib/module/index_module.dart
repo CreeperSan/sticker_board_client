@@ -1,4 +1,5 @@
 
+import 'package:log/log.dart';
 import 'package:network/network.dart';
 import 'package:flutter/material.dart';
 import 'package:sticker_board/operator/category_operator.dart';
@@ -55,7 +56,24 @@ class IndexModule with ChangeNotifier{
   }
 
   void loadStickerModel(){
+    stickerLoadingState = NetworkLoadingState.Loading;
+    notifyListeners();
 
+    StickerBoardManager.instance.queryStickerList(0, 100,
+      onSuccess: (responseList){
+        LogManager.d('Query sticker list success. size=${responseList.length}', this.runtimeType);
+        // stickerList.clear();
+        // stickerList.addAll(responseList);
+        stickerList = responseList;
+        stickerLoadingState = NetworkLoadingState.Idle;
+        notifyListeners();
+      },
+      onFail: (code, message){
+        LogManager.w('Query sticker list fail. code=$code message=$message', this.runtimeType);
+        stickerLoadingState = NetworkLoadingState.Idle;
+        notifyListeners();
+      }
+    );
   }
 
 }
