@@ -39,6 +39,6 @@ class URLBuilder {
 
 
   /// OSS
-  static String ossGetSignature() => '${getHostAddress()}/api/oss/v1/get_signature';
+  static String ossGetSignature(String action) => '${getHostAddress()}/api/oss/v1/get_signature?action=$action';
 
 }

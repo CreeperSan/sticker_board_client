@@ -37,15 +37,15 @@ class OSSUploader {
   }
 
   // TODO : make this method return a Future
-  void uploadFile(File file, String uid, String token,{
-    void Function()? onSuccess,
+  void uploadFile(File file, String uid, String token, String action,{
+    void Function(String path, String bucket)? onSuccess,
     void Function(int code, String message)? onFail,
   }){
     // if(!_isCanUpload){
     //   return;
     // }
     // 1. Get key from server
-    NetworkManager.instance.fetch(URLBuilder.ossGetSignature(),
+    NetworkManager.instance.fetch(URLBuilder.ossGetSignature(action),
       header: {
         'sticker-board-version-code' : '1', // TODO : fix this value later
         'sticker-board-uid' : uid,
@@ -64,8 +64,10 @@ class OSSUploader {
         final dir = signatureResult['dir'];
         final callback = signatureResult['callback'];
 
+        final fileKey = dir + DateTime.now().millisecondsSinceEpoch.toString() + '.' + file.path.pathFileExtension();
+
         final uploadFormParams = {
-          'key' : dir + DateTime.now().millisecondsSinceEpoch.toString() + '.' + file.path.pathFileExtension(),
+          'key' : fileKey,
           'policy': policy,
           'OSSAccessKeyId': accessID,
           'success_action_status' : '200', // make oss server return 200 or else oss server will return 204 by default
@@ -82,8 +84,11 @@ class OSSUploader {
           onSuccess: (response){
             print("Upload File Finish");
             print(response);
-
-            onSuccess?.call();
+            if(response['Status'] == 'OK'){
+              onSuccess?.call(fileKey, host);
+            } else {
+              onFail?.call(0, 'Upload failed, please try again');
+            }
           },
           onFail: (error){
             print("Upload File Fail");

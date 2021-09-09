@@ -47,6 +47,8 @@ class NetworkManager {
     void Function(int count, int total)? onReceiveProgress,
   }){
     print('Network Request -> URL=$url');
+    print('Network Request -> data=$data');
+    print('Network Request -> form=${formData?.fields}');
     CancelToken cancelToken = CancelToken();
     switch(requestMethod){
       case RequestMethod.Get: {

@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
 import 'package:network/manager/network_manager.dart';
+import 'package:sticker_board_api/sticker_board_api.dart';
 import 'package:toast/manager/toast_manager.dart';
 import 'package:formatter/formatter.dart';
 import 'package:kv_storage/kv_storage.dart';
@@ -102,15 +103,15 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
   }
 
   void _onCreateSticker(BuildContext context){
-    if(imagePath.isEmpty){
-      ToastManager.show('Please choose an image file to upload');
-      return;
-    }
-    if(!FileSystemEntity.isFileSync(imagePath)){
-      ToastManager.show('The path your choose is not a file.');
-      return;
-    }
-    final file = File(imagePath);
+    // if(imagePath.isEmpty){
+    //   ToastManager.show('Please choose an image file to upload');
+    //   return;
+    // }
+    // if(!FileSystemEntity.isFileSync(imagePath)){
+    //   ToastManager.show('The path your choose is not a file.');
+    //   return;
+    // }
+    final file = File('/Users/creepersan/Downloads/rock.jpg');
     if(!file.existsSync()){
       ToastManager.show('The file has been deleted, please choose another file.');
       return;
@@ -123,10 +124,12 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
       return;
     }
     ToastManager.show('Uploading...');
-    OSSUploader.instance.uploadFile(file, uid, token,
-      onSuccess: (){
+    OSSUploader.instance.uploadFile(file, uid, token, 'create_sticker_plain_image',
+      onSuccess: (path, bucket){
         // 2. Add sticker to server
-        ToastManager.show('Upload file finish');
+        ToastManager.show('Upload file success, path->$path');
+
+
       },
       onFail: (code, message){
         ToastManager.show(message);
