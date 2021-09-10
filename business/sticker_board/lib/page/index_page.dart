@@ -16,6 +16,7 @@ import 'package:sticker_board/widget/category_widget.dart';
 import 'package:sticker_board/widget/drawer_group_widget.dart';
 import 'package:sticker_board/widget/drawer_hint_widget.dart';
 import 'package:sticker_board/widget/index_create_sticker_header_widget.dart';
+import 'package:sticker_board/widget/sticker/plain_image_sticker_widget.dart';
 import 'package:sticker_board/widget/sticker/plain_text_sticker_widget.dart';
 import 'package:sticker_board/widget/tag_widget.dart';
 import 'package:sticker_board_api/model/tag_model.dart';
@@ -259,6 +260,8 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
               final stickerModel = stickerList[index];
               if(stickerModel is StickerPlainTextModel){
                 return PlainTextStickerWidget(stickerModel);
+              } else if(stickerModel is StickerPlainImageModel){
+                return PlainImageStickerWidget(stickerModel);
               } else {
                 return Container(
                   child: Text('Not supported yet, please update to newest version.'),

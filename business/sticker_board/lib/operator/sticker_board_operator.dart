@@ -118,4 +118,47 @@ class StickerBoardOperator extends StickerBoardInterface{
     );
   }
 
+  @override
+  void createStickerPlainImage({
+    status = StickerStatus.Processing,
+    String category = '',
+    List<String> tags = const [],
+    int star = 0,
+    bool isPinned = false,
+    String background = '',
+    String title = '',
+    String description = '',
+    required String imagePath,
+    void Function()? onSuccess,
+    void Function(int code, String message)? onFail,
+  }) {
+    NetworkManager.instance.fetch(URLBuilder.stickerCreatePlainImage(),
+      requestMethod: RequestMethod.Post,
+      data: {
+        'star' : star,
+        'status' : status,
+        'title' : title,
+        'background' : background,
+        'category_id' : category,
+        'tag_id' : tags,
+        'is_pinned' : isPinned,
+        'description' : description,
+        'image_path' : imagePath,
+      },
+      onSuccess: (response){
+        final responseCode = response['code'];
+        final responseMessage = response['msg'];
+        if(responseCode == 200){
+          onSuccess?.call();
+        } else {
+          onFail?.call(responseCode, responseMessage);
+        }
+      },
+      onFail: (error){
+        print(error);
+        onFail?.call(0, 'Network error, please check your network connection');
+      }
+    );
+  }
+
 }

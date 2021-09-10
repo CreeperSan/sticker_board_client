@@ -84,10 +84,14 @@ class OSSUploader {
           onSuccess: (response){
             print("Upload File Finish");
             print(response);
-            if(response['Status'] == 'OK'){
-              onSuccess?.call(fileKey, host);
+            final responseCode = response['code'] ?? 0;
+            final responseMessage = response['msg'] ?? '';
+            final responseFile = response['file'] ?? '';
+            final responseBucket = response['bucket'] ?? '';
+            if(responseCode == 200){
+              onSuccess?.call(responseFile, responseBucket);
             } else {
-              onFail?.call(0, 'Upload failed, please try again');
+              onFail?.call(responseCode, responseMessage);
             }
           },
           onFail: (error){

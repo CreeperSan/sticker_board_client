@@ -32,8 +32,8 @@ class URLBuilder {
   static String stickerDeleteTag() => '${getHostAddress()}/api/tag/v1/delete';
   static String stickerListTag() => '${getHostAddress()}/api/tag/v1/list';
 
-  static String stickerCreatePlainText() => '${getHostAddress()}/api/sticker/v1/plain_image/create';
-  static String stickerCreatePlainImage() => '${getHostAddress()}/api/sticker/v1/plain_text/create';
+  static String stickerCreatePlainText() => '${getHostAddress()}/api/sticker/v1/plain_text/create';
+  static String stickerCreatePlainImage() => '${getHostAddress()}/api/sticker/v1/plain_image/create';
   static String stickerDelete() => '${getHostAddress()}/api/sticker/v1/delete';
   static String stickerQuery() => '${getHostAddress()}/api/sticker/v1/query';
 
