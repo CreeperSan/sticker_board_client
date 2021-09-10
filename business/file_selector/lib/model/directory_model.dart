@@ -16,9 +16,14 @@ class DirectoryModel {
     }
 
     // Files
-    directory.listSync().forEach((element) {
-      fileList.add(FileModel(element.path));
+    final fileModelList = directory.listSync().map((e){
+      return FileModel(e.path);
+    }).toList();
+    fileModelList.sort((a, b){
+      return a.name.toLowerCase().compareTo(b.name.toLowerCase());
     });
+    fileList.clear();
+    fileList.addAll(fileModelList);
   }
 
 }
