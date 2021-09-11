@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:file_selector/model/file_model.dart';
+import 'package:formatter/formatter.dart';
 
 class DirectoryModel {
   List<FileModel> fileList = [];
@@ -10,10 +11,7 @@ class DirectoryModel {
     final directory = Directory(path);
 
     // name
-    name = directory.path;
-    if(name.contains('/')){
-      name = name.substring(name.lastIndexOf('/')+1);
-    }
+    name = directory.path.pathFileName();
 
     // Files
     final fileModelList = directory.listSync().map((e){

@@ -122,7 +122,11 @@ class _FilePickerPageState extends State<FilePickerPage> {
             itemBuilder: (itemContext, index){
               final fileModel = fileList[index];
               return ListTile(
-                leading: Icon(fileModel.isDirectory ? Icons.folder_sharp : Icons.insert_drive_file_sharp),
+                leading: Container(
+                  width: 36,
+                  height: 36,
+                  child: _getFileIcon(fileModel),
+                ),
                 title: Text(fileModel.name,
                   style: TextStyle(
                     color: Colors.black,
@@ -175,6 +179,40 @@ class _FilePickerPageState extends State<FilePickerPage> {
       ));
     }
 
+  }
+
+
+  Widget _getFileIcon(FileModel fileModel){
+    switch(fileModel.fileType){
+      case FileType.Directory:
+        return Icon(Icons.folder_sharp);
+      case FileType.CompressFile:
+        return Icon(Icons.book);
+      case FileType.Code:
+        return Icon(Icons.code);
+      case FileType.Markdown:
+      case FileType.Text:
+        return Icon(Icons.text_snippet);
+      case FileType.Image:
+        // return Icon(Icons.image);
+        return Image.file(File(fileModel.path),
+          width: 36,
+          height: 36,
+          fit: BoxFit.cover,
+        );
+      case FileType.Sound:
+        return Icon(Icons.music_note);
+      case FileType.Video:
+      case FileType.Flash:
+        return Icon(Icons.video_collection);
+      case FileType.Windows:
+        return Icon(Icons.desktop_windows);
+      case FileType.OfficeWord:
+      case FileType.OfficePowerPoint:
+      case FileType.OfficeExcel:
+      default:
+        return Icon(Icons.insert_drive_file_sharp);
+    }
   }
 
 }

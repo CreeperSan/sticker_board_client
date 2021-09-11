@@ -18,6 +18,8 @@ dev_dependencies:
     path: ../../base/third_libs
   log:
     path: ../../base/log
+  formatter:
+    path: ../../base/formatter
 
 flutter:
 
