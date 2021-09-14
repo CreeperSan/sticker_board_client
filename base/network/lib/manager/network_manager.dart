@@ -35,6 +35,7 @@ class NetworkManager {
     _dio.options = _dioBaseOptions;
   }
 
+  @Deprecated('')
   CancelToken fetch(String url, {
     RequestMethod requestMethod = RequestMethod.Get,
     Map<String, dynamic> urlParams = const {},
@@ -95,67 +96,46 @@ class NetworkManager {
     _dio.options.headers = header;
   }
 
-  // void testMethod(){
-  //   print('Test OSS Upload');
-  //
-  //   final file = File('/Users/creepersan/Desktop/rock.jpg');
-  //   // final file = File('/Users/creepersan/test.kotlin');
-  //   print(file.path);
-  //   print(file.absolute.path);
-  //   print(file.existsSync());
-  //
-  //   NetworkManager.instance.fetch('http://localhost:8080/api/oss/v1/get_signature',
-  //     header: {
-  //       'sticker-board-version-code' : '1',
-  //       'sticker-board-uid' : '6126e612a9192b1b0c9628be',
-  //       'sticker-board-platform' : '1',
-  //       'sticker-board-machine-code' : '123456789012345678',
-  //       'sticker-board-device-name' : 'Test Device',
-  //       'sticker-board-brand' : 'Test Brand',
-  //       'sticker-board-token' : '96941ef6-23fd-4752-a3c4-aa3700dea3d6',
-  //     },
-  //     onSuccess: (data){
-  //       print('onSuccess #1');
-  //       print(data.runtimeType);
-  //       print(data);
-  //
-  //       print('Uploading file to OSS');
-  //
-  //       var signatureResult = json.decode(data);
-  //       final accessID = signatureResult['accessid'];
-  //       final host = signatureResult['host'];
-  //       final signature = signatureResult['signature'];
-  //       final policy = signatureResult['policy'];
-  //       final dir = signatureResult['dir'];
-  //       final callback = signatureResult['callback'];
-  //
-  //       final uploadFormParams = {
-  //         'key' : dir + 'rock.jpg',
-  //         'policy': policy,
-  //         'OSSAccessKeyId': accessID,
-  //         'success_action_status' : '200', //Make server return 200 or else server will return 204 by default
-  //         'callback' : callback,
-  //         'signature': signature,
-  //         'contentType': 'multipart/form-data',
-  //         'file': MultipartFile.fromFileSync(file.path),
-  //       };
-  //
-  //       NetworkManager.instance._dio.post(
-  //           host,
-  //           data: FormData.fromMap(uploadFormParams),
-  //       ).then((value){
-  //         print("Upload File Finish");
-  //         print(value);
-  //       }).catchError((onError){
-  //         print("Upload File Fail");
-  //         print(onError);
-  //       });
-  //     },
-  //     onFail: (err){
-  //       print('onError #1');
-  //       print(err);
-  //     }
-  //   );
-  // }
+
+
+
+  Future<Response> rawFetch(String url, {
+    RequestMethod requestMethod = RequestMethod.Get,
+    Map<String, dynamic>? urlData,
+    Map<String, dynamic>? jsonData,
+    Map<String, dynamic>? customHeader,
+    FormData? formData,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+    int? timeout,
+  }){
+    switch(requestMethod){
+      case RequestMethod.Get:
+        return _dio.get(url,
+          queryParameters: urlData,
+          cancelToken: cancelToken,
+          onReceiveProgress: onReceiveProgress,
+          options: Options(
+            headers: customHeader,
+            receiveTimeout: timeout,
+            sendTimeout: timeout,
+          ),
+        );
+      case RequestMethod.Post:
+        return _dio.post(url,
+          queryParameters: urlData,
+          data: jsonData ?? formData,
+          cancelToken: cancelToken,
+          onSendProgress: onSendProgress,
+          onReceiveProgress: onReceiveProgress,
+          options: Options(
+            headers: customHeader,
+            receiveTimeout: timeout,
+            sendTimeout: timeout,
+          )
+        );
+    }
+  }
 
 }

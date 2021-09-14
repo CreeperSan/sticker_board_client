@@ -3,7 +3,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:sticker_board/page/create_plain_image_sticker_page.dart';
+import 'package:sticker_board/page/create_plain_sound_sticker_page.dart';
 import 'package:sticker_board/page/create_plain_text_sticker_page.dart';
+import 'package:sticker_board/page/create_todo_list_sticker_page.dart';
 
 class StickerTypeSelectToCreatePage extends StatelessWidget{
 
@@ -47,6 +49,11 @@ class StickerTypeSelectToCreatePage extends StatelessWidget{
                           title: Text('Plain Sound'),
                           onTap: () => _onCreatePlainSoundClicked(context),
                         ),
+                        ListTile(
+                          leading: Icon(Icons.list),
+                          title: Text('Todo List'),
+                          onTap: () => _onCreateTodoListClicked(context),
+                        ),
                       ],
                     ),
                   ),
@@ -89,7 +96,21 @@ class StickerTypeSelectToCreatePage extends StatelessWidget{
   }
 
   void _onCreatePlainSoundClicked(BuildContext context){
+    // TODO replace this with named router
+    Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (routeContext) {
+          return CreatePlainSoundStickerPage();
+        }
+    ));
+  }
 
+  void _onCreateTodoListClicked(BuildContext context){
+    // TODO replace this with named router
+    Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (routeContext) {
+          return CreateTodoListStickerPage();
+        }
+    ));
   }
 
 }
