@@ -161,4 +161,41 @@ class StickerBoardOperator extends StickerBoardInterface{
     );
   }
 
+  @override
+  Future<CreatePlainSoundStickerResponse> createStickerPlainSound({
+    required String soundPath,
+    required int duration,
+    status = StickerStatus.Processing,
+    String category = '',
+    List<String> tags = const [],
+    int star = 0,
+    bool isPinned = false,
+    String background = '',
+    String title = '',
+    String description = '',
+  }) async {
+    return NetworkManager.instance.rawFetch(URLBuilder.stickerCreatePlainSound(),
+      requestMethod: RequestMethod.Post,
+      jsonData: {
+        'star' : star,
+        'status' : status,
+        'title' : title,
+        'background' : background,
+        'category_id' : category,
+        'tag_id' : tags,
+        'is_pinned' : isPinned,
+        'description' : description,
+        'path' : soundPath,
+        'duration' : duration,
+      }
+    ).then((value){
+      print(value.runtimeType);
+      print(value);
+      return CreatePlainSoundStickerResponse(
+        code: value.data['code'],
+        message: value.data['msg'],
+      );
+    });
+  }
+
 }

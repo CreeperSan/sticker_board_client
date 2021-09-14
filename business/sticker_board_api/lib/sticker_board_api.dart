@@ -12,3 +12,4 @@ export 'package:sticker_board_api/interface/category_interface.dart';
 export 'package:sticker_board_api/interface/tag_interface.dart';
 export 'package:sticker_board_api/interface/sticker_board_interface.dart';
 export 'package:sticker_board_api/sticker_board_managers.dart';
+export 'package:sticker_board_api/response/create_plain_sound_sticker_response.dart';

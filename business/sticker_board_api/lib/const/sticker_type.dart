@@ -7,5 +7,6 @@ class StickerType {
   static const PlainText = 1;
   static const PlainImage = 2;
   static const PlainSound = 3;
+  static const TodoList = 4;
 
 }

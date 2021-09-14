@@ -22,4 +22,17 @@ abstract class StickerBoardInterface {
     void Function(int code, String message)? onFail,
   });
 
+  Future<CreatePlainSoundStickerResponse> createStickerPlainSound({
+    required String soundPath,
+    required int duration,
+    status = StickerStatus.Processing,
+    String category = '',
+    List<String> tags = const [],
+    int star = 0,
+    bool isPinned = false,
+    String background = '',
+    String title = '',
+    String description = '',
+  });
+
 }

@@ -36,4 +36,10 @@ class StickerTodoListItemModel {
   String message;
   String description;
 
+  StickerTodoListItemModel({
+    required this.message,
+    required this.state,
+    this.description = '',
+  });
+
 }

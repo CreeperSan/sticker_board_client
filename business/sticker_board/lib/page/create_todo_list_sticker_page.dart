@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class CreateTodoListStickerPage extends StatefulWidget{
 
-  CreateTodoListStickerPage({
-
-  });
+  // CreateTodoListStickerPage({
+  //
+  // });
 
   @override
   State<StatefulWidget> createState() {
