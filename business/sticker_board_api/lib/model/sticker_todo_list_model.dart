@@ -3,6 +3,7 @@ import 'package:sticker_board_api/sticker_board_api.dart';
 
 class StickerTodoListModel extends StickerModel{
   String description;
+  List<StickerTodoListItemModel> todoList;
 
   StickerTodoListModel({
     required String id,
@@ -16,6 +17,7 @@ class StickerTodoListModel extends StickerModel{
     required int updateTime,
     required String title,
     required this.description,
+    required this.todoList,
   }) : super (
     id: id,
     status: status,
@@ -32,9 +34,14 @@ class StickerTodoListModel extends StickerModel{
 }
 
 class StickerTodoListItemModel {
+  static const STATE_PENDING = 0;
+  static const STATE_FINISH = 1;
+
   int state;
   String message;
   String description;
+
+  bool get isFinish => state == STATE_PENDING;
 
   StickerTodoListItemModel({
     required this.message,

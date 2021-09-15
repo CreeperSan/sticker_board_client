@@ -1,6 +1,7 @@
 
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:network/enum/request_method.dart';
 import 'package:network/manager/network_manager.dart';
@@ -19,7 +20,9 @@ import 'package:sticker_board/widget/index_create_sticker_header_widget.dart';
 import 'package:sticker_board/widget/sticker/plain_image_sticker_widget.dart';
 import 'package:sticker_board/widget/sticker/plain_sound_sticker_widget.dart';
 import 'package:sticker_board/widget/sticker/plain_text_sticker_widget.dart';
+import 'package:sticker_board/widget/sticker/todo_list_sticker_widget.dart';
 import 'package:sticker_board/widget/tag_widget.dart';
+import 'package:sticker_board_api/model/sticker_todo_list_model.dart';
 import 'package:sticker_board_api/model/tag_model.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
 import 'package:log/log.dart';
@@ -72,6 +75,16 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
           backgroundColor: Color(0xFFF2F5F7),
           appBar: AppBar(
             title: Text('Sticker Board'),
+            actions: [
+              CupertinoButton(
+                child: Text('Refresh',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: _onRefreshStickerClick,
+              ),
+            ],
           ),
           drawer: Drawer(
             child: SingleChildScrollView(
@@ -265,6 +278,8 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
                 return PlainImageStickerWidget(stickerModel);
               } else if(stickerModel is StickerPlainSoundModel){
                 return PlainSoundStickerWidget(stickerModel);
+              } else if(stickerModel is StickerTodoListModel){
+                return TodoListStickerWidget(stickerModel);
               } else {
                 return Container(
                   child: Text('Not supported yet, please update to newest version.'),
@@ -284,16 +299,8 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
     );
   }
 
-  void _onSubmitPlainTextSticker(){
-
-  }
-
-  void _onCreatePlainImageStickerPressed(){
-
-  }
-
-  void _onCreatePlainSoundStickerPressed(){
-
+  void _onRefreshStickerClick(){
+    _indexModule.loadStickerModel();
   }
 
   //////////////////////////////////////////////////////////////////////////////

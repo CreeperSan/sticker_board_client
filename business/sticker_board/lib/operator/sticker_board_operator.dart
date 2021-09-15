@@ -1,6 +1,7 @@
 
 import 'package:log/log.dart';
 import 'package:network/network.dart';
+import 'package:sticker_board_api/model/sticker_todo_list_model.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
 import 'package:url_builder/url_builder.dart';
 
@@ -101,6 +102,36 @@ class StickerBoardOperator extends StickerBoardInterface{
                     url: responseDataItem['url'] ?? '',
                     description: responseDataItem['description'] ?? '',
                     duration: responseDataItem['duration'] ?? 0,
+                  ));
+                  break;
+                case StickerType.TodoList:
+                  final todoList = <StickerTodoListItemModel>[];
+                  final responseTodoList = responseDataItem['todos'];
+                  if(responseTodoList != null && responseTodoList is List){
+                    for(var responseTodoItem in responseTodoList){
+                      final responseTodoItemState = responseTodoItem['state'];
+                      final responseTodoItemMessage = responseTodoItem['message'];
+                      final responseTodoItemDescription = responseTodoItem['description'];
+                      todoList.add(StickerTodoListItemModel(
+                        message: responseTodoItemMessage,
+                        state: responseTodoItemState,
+                        description: responseTodoItemDescription,
+                      ));
+                    }
+                  }
+                  stickerModelList.add(StickerTodoListModel(
+                    id: responseDataItem['id'] ?? '',
+                    status: responseDataItem['status'] ?? StickerStatus.Processing,
+                    tags: responseDataItem['tags'] ?? [],
+                    star: responseDataItem['star'] ?? 0,
+                    isPinned: responseDataItem['is_pinned'] ?? false,
+                    background: responseDataItem['background'] ?? '',
+                    createTime: responseDataItem['create_time'] ?? 0,
+                    type: itemType,
+                    updateTime: responseDataItem['update_time'] ?? 0,
+                    title: responseDataItem['title'] ?? '',
+                    description: responseDataItem['description'] ?? '',
+                    todoList: todoList,
                   ));
                   break;
                 default:
