@@ -1,11 +1,15 @@
 
+import 'dart:collection';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
 import 'package:network/network.dart';
 import 'package:sticker_board/page/choose_sticker_category_page.dart';
+import 'package:sticker_board/page/choose_sticker_tag_page.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
 import 'package:toast/manager/toast_manager.dart';
+import 'package:formatter/formatter.dart';
 
 class CreatePlainTextStickerPage extends StatefulWidget{
 
@@ -21,6 +25,8 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
   final TextEditingController _titleEditController = TextEditingController();
   final TextEditingController _messageEditController = TextEditingController();
   CategoryModel? _categoryModel;
+  List<TagModel> _tagModelList = [];
+  Set<String> _selectedTag = HashSet<String>();
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +63,28 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
                 Icon(Icons.chevron_right),
               ],
             ),
-            onTap: () => _onCategoryClick(context),
+            onTap: _onCategoryClick,
+          ),
+          ListTile(
+            leading: Icon(Icons.tag),
+            title: Text('Tag'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if(_tagModelList.isNotEmpty) Text(_tagModelList.combineAll((index, item, result){
+                    if(result == null || result.toString().trim().isEmpty){
+                      return item.name;
+                    } else {
+                      return '$result, ${item.name}';
+                    }
+                  }),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Icon(Icons.chevron_right),
+              ],
+            ),
+            onTap: _onTagClick,
           ),
           Expanded(
             child: TextField(
@@ -116,7 +143,7 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
     );
   }
 
-  void _onCategoryClick(BuildContext context){
+  void _onCategoryClick(){
     Navigator.push(context, MaterialPageRoute(
         builder: (routeContext){
           return ChooseStickerCategoryPage();
@@ -128,6 +155,24 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
       if(value is ChooseStickerCategoryPageResponse){
         if(value.isChoose) {
           _categoryModel = value.categoryModel;
+          setState(() { });
+        }
+      }
+    });
+  }
+
+  void _onTagClick(){
+    Navigator.push(context, MaterialPageRoute(
+        builder: (routeContext){
+          return ChooseStickerTagPage();
+        }
+    )).then((value){
+      if(value == null){
+        return;
+      }
+      if(value is ChooseStickerTagResponse){
+        if(value.isConfirm) {
+          _selectedTag = value.tagList.toSet();
           setState(() { });
         }
       }
