@@ -25,8 +25,7 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
   final TextEditingController _titleEditController = TextEditingController();
   final TextEditingController _messageEditController = TextEditingController();
   CategoryModel? _categoryModel;
-  List<TagModel> _tagModelList = [];
-  Set<String> _selectedTag = HashSet<String>();
+  List<TagModel> _selectedTag = <TagModel>[];
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +70,7 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if(_tagModelList.isNotEmpty) Text(_tagModelList.combineAll((index, item, result){
+                if(_selectedTag.isNotEmpty) Text(_selectedTag.combineAll((index, item, result){
                     if(result == null || result.toString().trim().isEmpty){
                       return item.name;
                     } else {
@@ -164,7 +163,9 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
   void _onTagClick(){
     Navigator.push(context, MaterialPageRoute(
         builder: (routeContext){
-          return ChooseStickerTagPage();
+          return ChooseStickerTagPage(
+            selectedTags: _selectedTag.map((e) => e.id).toList(),
+          );
         }
     )).then((value){
       if(value == null){
@@ -172,7 +173,7 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
       }
       if(value is ChooseStickerTagResponse){
         if(value.isConfirm) {
-          _selectedTag = value.tagList.toSet();
+          _selectedTag = value.tagList;
           setState(() { });
         }
       }

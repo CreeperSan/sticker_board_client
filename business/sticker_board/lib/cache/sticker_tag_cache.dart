@@ -20,7 +20,7 @@ class StickerTagCache extends BaseCache<CacheFetchResponse<List<TagModel>>> {
   List<TagModel> _cache = [];
 
   @override
-  Future<CacheFetchResponse> fetch({
+  Future<CacheFetchResponse<List<TagModel>>> fetch({
     bool forceRefresh = false,
   }) async {
     // Find out whether should fetch data from server
@@ -72,7 +72,7 @@ class StickerTagCache extends BaseCache<CacheFetchResponse<List<TagModel>>> {
               }
       } catch (e) {
         print(e);
-        return CacheFetchResponse<List<CategoryModel>>(
+        return CacheFetchResponse<List<TagModel>>(
           isFetchSuccess: false,
           message: 'Fetch category failed, please check your internet connection',
           source: CacheFetchSource.Network,

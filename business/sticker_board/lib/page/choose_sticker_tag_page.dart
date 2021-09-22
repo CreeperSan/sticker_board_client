@@ -2,6 +2,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:sticker_board/cache/sticker_tag_cache.dart';
 import 'package:sticker_board_api/model/tag_model.dart';
 
 class ChooseStickerTagPage extends StatefulWidget{
@@ -78,7 +79,7 @@ class _ChooseStickerTagPageState extends State<ChooseStickerTagPage>{
                 value: _selectedTagIDSet.contains(item.id),
               ),
             ),
-            onTap: () => _onSelectTag(item.name),
+            onTap: () => _onSelectTag(item.id),
           );
         },
       ),
@@ -87,12 +88,25 @@ class _ChooseStickerTagPageState extends State<ChooseStickerTagPage>{
 
   Future _onLoad({
     bool loadFromInternet = false,
-  }){
+  }) async {
     _hintMessage = 'Loading...';
     setState(() { });
 
+    return StickerTagCache.instance.fetch(forceRefresh: loadFromInternet).then((response){
+      _tagModelList.clear();
+      if(response.isFetchSuccess){
+        if(response.data.isEmpty){
+          _hintMessage = 'Empty';
+        } else {
+          _tagModelList.addAll(response.data);
+          _hintMessage = '';
+        }
+      } else {
+        _hintMessage = response.message;
+      }
 
-    return Future.value();
+      setState(() { });
+    });
   }
 
   void _onSelectTag(String tagID){
@@ -112,9 +126,22 @@ class _ChooseStickerTagPageState extends State<ChooseStickerTagPage>{
   }
 
   void _onConfirmPressed(){
+    // find out all available tags
+    List<TagModel> resultTag = [];
+    Map<String, TagModel> tmpTagCache = {};
+    _tagModelList.forEach((tagModel) {
+      tmpTagCache[tagModel.id] = tagModel;
+    });
+    _selectedTagIDSet.forEach((tagID) {
+      final tmpTag = tmpTagCache[tagID];
+      if(tmpTag != null && tmpTag is TagModel){
+        resultTag.add(tmpTag);
+      }
+    });
+    // return tag models
     Navigator.pop(context, ChooseStickerTagResponse(
       isConfirm: true,
-      tagList: _selectedTagIDSet.toList(),
+      tagList: resultTag,
     ));
   }
 
@@ -122,7 +149,7 @@ class _ChooseStickerTagPageState extends State<ChooseStickerTagPage>{
 
 class ChooseStickerTagResponse {
   bool isConfirm;
-  List<String> tagList;
+  List<TagModel> tagList;
 
   ChooseStickerTagResponse({
     required this.isConfirm,
