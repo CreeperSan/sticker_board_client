@@ -6,6 +6,7 @@ export 'package:sticker_board_api/model/sticker_model.dart';
 export 'package:sticker_board_api/model/sticker_plain_text_model.dart';
 export 'package:sticker_board_api/model/sticker_plain_image_model.dart';
 export 'package:sticker_board_api/model/sticker_plain_sound_model.dart';
+export 'package:sticker_board_api/model/filter/sticker_filter_model.dart';
 export 'package:sticker_board_api/const/sticker_status.dart';
 export 'package:sticker_board_api/const/sticker_type.dart';
 export 'package:sticker_board_api/interface/category_interface.dart';

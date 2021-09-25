@@ -124,24 +124,28 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
   /// The code below is about Drawer
 
   Widget _buildDrawerCommonGroup(){
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        DrawerGroupWidget(
-          name: 'Sticker Board',
-          state: NetworkLoadingState.Idle,
-        ),
-        DrawerItemWidget(
-          icon: Icon(Icons.inbox),
-          name: 'All',
-          onPressed: _onStickerBoardAllPressed,
-        ),
-        DrawerItemWidget(
-          icon: Icon(Icons.archive),
-          name: 'Archive',
-          onPressed: _onStickerBoardArchivePressed,
-        ),
-      ],
+    return Consumer<IndexModule>(
+      builder: (consumerContext, module, child){
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DrawerGroupWidget(
+              name: 'Sticker Board',
+              state: NetworkLoadingState.Idle,
+            ),
+            DrawerItemWidget(
+              icon: Icon(Icons.inbox),
+              name: 'All',
+              onPressed: () => _onStickerBoardAllPressed(module),
+            ),
+            // DrawerItemWidget(
+            //   icon: Icon(Icons.archive),
+            //   name: 'Archive',
+            //   onPressed: _onStickerBoardArchivePressed,
+            // ),
+          ],
+        );
+      },
     );
   }
 
@@ -163,8 +167,8 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
         } else {
           module.categoryList.forEach((element) {
             categoryWidgetList.add(CategoryWidget(element,
-              onPressed: _onCategoryPressed,
-              onLongPressed: _onCategoryLongPressed,
+              onPressed: (model) => _onCategoryPressed(module, model),
+              onLongPressed: (model) => _onCategoryLongPressed(module, model),
             ));
           });
         }
@@ -194,8 +198,8 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
         } else {
           module.tagList.forEach((element) {
             tagWidgetList.add(TagWidget(element,
-              onPressed: _onTagPressed,
-              onLongPressed: _onTagLongPressed,
+              onPressed: (model) => _onTagPressed(module, model),
+              onLongPressed: (model) => _onTagLongPressed(module, model),
             ));
           });
         }
@@ -227,73 +231,95 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
     });
   }
 
-  void _onCategoryPressed(CategoryModel categoryModel){
+  void _onCategoryPressed(IndexModule module, CategoryModel categoryModel){
     LogManager.d('Category has been pressed. category=$categoryModel', TAG);
+    module.filterCategory(categoryModel.id);
+    Navigator.pop(context); // close drawer
   }
 
-  void _onCategoryLongPressed(CategoryModel categoryModel){
+  void _onCategoryLongPressed(IndexModule module, CategoryModel categoryModel){
     LogManager.d('Category has been long pressed. category=$categoryModel', TAG);
-
   }
 
-  void _onTagPressed(TagModel tagModel){
+  void _onTagPressed(IndexModule module, TagModel tagModel){
     LogManager.d('Tag has been pressed. category=$tagModel', TAG);
-
+    module.filterTag(tagModel.id);
+    Navigator.pop(context); // close drawer
   }
 
-  void _onTagLongPressed(TagModel tagModel){
+  void _onTagLongPressed(IndexModule module, TagModel tagModel){
     LogManager.d('Tag has been pressed. category=$tagModel', TAG);
-
   }
 
-  void _onStickerBoardAllPressed(){
+  void _onStickerBoardAllPressed(IndexModule module){
     LogManager.d('All sticker board has been pressed.', TAG);
-
+    module.resetFilter();
+    Navigator.pop(context); // close drawer
   }
 
-  void _onStickerBoardArchivePressed(){
-    LogManager.d('Archive sticker board has been pressed.', TAG);
-
-  }
+  // void _onStickerBoardArchivePressed(){
+  //   LogManager.d('Archive sticker board has been pressed.', TAG);
+  //
+  // }
 
   //////////////////////////////////////////////////////////////////////////////
   /// The code below is about Content
 
   Widget _onBuildBody(){
-    return Selector<IndexModule, List<StickerModel>>(
-      selector: (selectorContext, indexModule) => indexModule.stickerList,
-      builder: (selectorContext, stickerList, child){
+    return Consumer<IndexModule>(
+      builder: (context, indexModule, child){
         // This will cause stack overflow exception from StaggeredGridView when expanding the width of whe window
         // var axisCount = max(1, MediaQuery.of(context).size.width ~/ 160);
+        final stickerList = indexModule.stickerList;
+        final hintMessage = context.read<IndexModule>().getFilterText();
         final axisCount = 2;
-        return RefreshIndicator(
-          child: StaggeredGridView.countBuilder(
-            crossAxisCount: axisCount,
-            itemCount: stickerList.length,
-            itemBuilder: (itemContext, index) {
-              final stickerModel = stickerList[index];
-              if(stickerModel is StickerPlainTextModel){
-                return PlainTextStickerWidget(stickerModel);
-              } else if(stickerModel is StickerPlainImageModel){
-                return PlainImageStickerWidget(stickerModel);
-              } else if(stickerModel is StickerPlainSoundModel){
-                return PlainSoundStickerWidget(stickerModel);
-              } else if(stickerModel is StickerTodoListModel){
-                return TodoListStickerWidget(stickerModel);
-              } else {
-                return Container(
-                  child: Text('Not supported yet, please update to newest version.'),
-                );
-              }
-            },
-            staggeredTileBuilder: (int index) {
-              return StaggeredTile.fit(1);
-            },
-          ),
-          onRefresh: (){
-            _indexModule.loadStickerModel();
-            return Future.delayed(Duration(seconds: 1,));
-          },
+        return Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              height: hintMessage.isEmpty ? 0 : 18,
+              child: Center(
+                child: Text(hintMessage,
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            Expanded(
+              child: RefreshIndicator(
+                child: StaggeredGridView.countBuilder(
+                  crossAxisCount: axisCount,
+                  itemCount: stickerList.length,
+                  itemBuilder: (itemContext, index) {
+                    final stickerModel = stickerList[index];
+                    if(stickerModel is StickerPlainTextModel){
+                      return PlainTextStickerWidget(stickerModel);
+                    } else if(stickerModel is StickerPlainImageModel){
+                      return PlainImageStickerWidget(stickerModel);
+                    } else if(stickerModel is StickerPlainSoundModel){
+                      return PlainSoundStickerWidget(stickerModel);
+                    } else if(stickerModel is StickerTodoListModel){
+                      return TodoListStickerWidget(stickerModel);
+                    } else {
+                      return Container(
+                        child: Text('Not supported yet, please update to newest version.'),
+                      );
+                    }
+                  },
+                  staggeredTileBuilder: (int index) {
+                    return StaggeredTile.fit(1);
+                  },
+                ),
+                onRefresh: (){
+                  _indexModule.loadStickerModel();
+                  return Future.delayed(Duration(seconds: 1,));
+                },
+              ),
+            ),
+          ],
         );
       },
     );

@@ -99,14 +99,10 @@ class StickerCategoryCache extends BaseCache<CategoryModel>{
   // TODO : Need Performance Optimise
   CategoryModel? getCategoryModel(String id){
 
-    print('Compare Category -> cacheSize:${_cache.length}');
-
-    print('Compare Category -> target:$id');
     if(id.isEmpty){
       return null;
     }
     for(var categoryModel in _cache){
-      print('Compare Category -> original:${categoryModel.id}   target:$id');
       if(categoryModel.id == id){
         return categoryModel;
       }

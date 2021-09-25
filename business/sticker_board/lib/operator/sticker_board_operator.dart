@@ -27,16 +27,26 @@ class StickerBoardOperator extends StickerBoardInterface{
   //
 
   @override
-  void queryStickerList(int page, int pageSize, {
+  void queryStickerList(int page, int pageSize, StickerFilterModel filterModel, {
     void Function(List<StickerModel> stickerList)? onSuccess,
     void Function(int code, String message)? onFail,
   }) {
+    // 1. Generate request data
+    final Map<String, Object> requestData = {
+      'page' : page,
+      'page_size' : pageSize,
+    };
+    if(filterModel.category.isNotEmpty){
+      requestData['category'] = filterModel.category;
+    }
+    if(filterModel.tag.isNotEmpty){
+      requestData['tag'] = filterModel.tag;
+    }
+
+    // 2. Send network request
     NetworkManager.instance.fetch(URLBuilder.stickerQuery(),
         requestMethod: RequestMethod.Post,
-        data: {
-          'page' : page,
-          'page_size' : pageSize,
-        },
+        data: requestData,
         onSuccess: (response){
           // LogManager.d('Get sticker list onSuccess:', this.runtimeType.toString());
           // LogManager.d(response, this.runtimeType.toString());
