@@ -12,6 +12,7 @@ import 'package:sticker_board/model/page/tag_add_page_result_model.dart';
 import 'package:sticker_board/module/index_module.dart';
 import 'package:sticker_board/operator/sticker_board_operator.dart';
 import 'package:sticker_board/operator/tag_operator.dart';
+import 'package:sticker_board/page/create_plain_text_sticker_page.dart';
 import 'package:sticker_board/page/sticker_type_select_to_create_page.dart';
 import 'package:sticker_board/widget/category_widget.dart';
 import 'package:sticker_board/widget/drawer_group_widget.dart';
@@ -29,6 +30,7 @@ import 'package:log/log.dart';
 import 'package:sticker_board/widget/drawer_item_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sticker_board_api/sticker_board_managers.dart';
+import 'package:toast/toast.dart';
 
 class IndexPage extends StatefulWidget{
 
@@ -295,15 +297,17 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
                   itemCount: stickerList.length,
                   itemBuilder: (itemContext, index) {
                     final stickerModel = stickerList[index];
-                    if(stickerModel is StickerPlainTextModel){
-                      return PlainTextStickerWidget(stickerModel);
-                    } else if(stickerModel is StickerPlainImageModel){
+                    if(stickerModel is StickerPlainTextModel){ /////////////////
+                      return PlainTextStickerWidget(stickerModel,
+                        onClick: () => _onPlainTextStickerClicked(stickerModel),
+                      );
+                    } else if(stickerModel is StickerPlainImageModel){ /////////
                       return PlainImageStickerWidget(stickerModel);
-                    } else if(stickerModel is StickerPlainSoundModel){
+                    } else if(stickerModel is StickerPlainSoundModel){ /////////
                       return PlainSoundStickerWidget(stickerModel);
-                    } else if(stickerModel is StickerTodoListModel){
+                    } else if(stickerModel is StickerTodoListModel){ ///////////
                       return TodoListStickerWidget(stickerModel);
-                    } else {
+                    } else { ///////////////////////////////////////////////////
                       return Container(
                         child: Text('Not supported yet, please update to newest version.'),
                       );
@@ -338,6 +342,16 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
       opaque: false,
       pageBuilder: (_, __, ___) {
         return StickerTypeSelectToCreatePage();
+      }
+    ));
+  }
+
+  void _onPlainTextStickerClicked(StickerPlainTextModel stickerModel){
+    Navigator.push(context, MaterialPageRoute(
+      builder: (routeContext){
+        return CreatePlainTextStickerPage(
+          sticker: stickerModel,
+        );
       }
     ));
   }

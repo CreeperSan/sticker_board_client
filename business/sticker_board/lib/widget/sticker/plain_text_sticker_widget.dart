@@ -14,7 +14,7 @@ class PlainTextStickerWidget extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    Widget widget = Container(
       margin: EdgeInsets.symmetric(
         horizontal: 6,
         vertical: 6,
@@ -71,6 +71,15 @@ class PlainTextStickerWidget extends StatelessWidget{
         ],
       ),
     );
+
+    if(onClick != null){
+      widget = GestureDetector(
+        onTap: () => onClick?.call(),
+        child: widget,
+      );
+    }
+
+    return widget;
   }
 
 }

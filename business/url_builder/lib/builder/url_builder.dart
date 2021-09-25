@@ -33,6 +33,7 @@ class URLBuilder {
   static String stickerListTag() => '${getHostAddress()}/api/tag/v1/list';
 
   static String stickerCreatePlainText() => '${getHostAddress()}/api/sticker/v1/plain_text/create';
+  static String stickerUpdatePlainText() => '${getHostAddress()}/api/sticker/v1/plain_text/update';
   static String stickerCreatePlainImage() => '${getHostAddress()}/api/sticker/v1/plain_image/create';
   static String stickerCreatePlainSound() => '${getHostAddress()}/api/sticker/v1/plain_sound/create';
   static String stickerCreateTodoList() => '${getHostAddress()}/api/sticker/v1/todo_list/create';
