@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:sticker_board/widget/sticker/common/sticker_widget_common_part_builder.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
 
 class PlainTextStickerWidget extends StatelessWidget{
@@ -58,9 +59,8 @@ class PlainTextStickerWidget extends StatelessWidget{
             ),
           ),
 
-          // Tags
-
-          // Category
+          // Category & Tags
+          StickerWidgetCommonPartBuilder.buildCategoryAndTagPart(model),
 
         ],
       ),

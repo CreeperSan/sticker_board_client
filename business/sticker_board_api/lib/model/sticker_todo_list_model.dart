@@ -16,6 +16,7 @@ class StickerTodoListModel extends StickerModel{
     required int type,
     required int updateTime,
     required String title,
+    required String category,
     required this.description,
     required this.todoList,
   }) : super (
@@ -29,6 +30,7 @@ class StickerTodoListModel extends StickerModel{
     type: type,
     updateTime: updateTime,
     title: title,
+    category: category,
   );
 
 }

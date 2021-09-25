@@ -5,6 +5,7 @@ class StickerModel {
   String id;
   int status;
   List<String> tags;
+  String category;
   int star;
   bool isPinned;
   String background;
@@ -24,6 +25,7 @@ class StickerModel {
     required this.type,
     required this.updateTime,
     required this.title,
+    required this.category,
   });
 
   @override

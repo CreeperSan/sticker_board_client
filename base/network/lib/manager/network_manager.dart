@@ -61,6 +61,10 @@ class NetworkManager {
           cancelToken: cancelToken,
           onReceiveProgress: onReceiveProgress,
         ).then((value){
+          print('Network Response -> URL=$url');
+          print('Network Response -> response=$value');
+          return value;
+        }).then((value){
           onSuccess?.call(value.data);
         }).catchError((exception){
           onFail?.call(exception);
@@ -78,6 +82,10 @@ class NetworkManager {
           onSendProgress: onSendProgress,
           onReceiveProgress: onReceiveProgress,
         ).then((value){
+          print('Network Response -> URL=$url');
+          print('Network Response -> response=$value');
+          return value;
+        }).then((value){
           onSuccess?.call(value.data);
         }).catchError((exception){
           onFail?.call(exception);

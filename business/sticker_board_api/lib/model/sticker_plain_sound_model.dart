@@ -17,6 +17,7 @@ class StickerPlainSoundModel extends StickerModel{
     required int type,
     required int updateTime,
     required String title,
+    required String category,
     required this.duration,
     required this.description,
     required this.url,
@@ -31,6 +32,7 @@ class StickerPlainSoundModel extends StickerModel{
     type: type,
     updateTime: updateTime,
     title: title,
+    category: category,
   );
 
   @override

@@ -10,6 +10,7 @@ import 'package:sticker_board/page/choose_sticker_tag_page.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
 import 'package:toast/manager/toast_manager.dart';
 import 'package:formatter/formatter.dart';
+import 'package:url_builder/url_builder.dart';
 
 class CreatePlainTextStickerPage extends StatefulWidget{
 
@@ -112,7 +113,7 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
       return;
     }
 
-    NetworkManager.instance.fetch('http://localhost:8080/api/sticker/v1/plain_text/create',
+    NetworkManager.instance.fetch(URLBuilder.stickerCreatePlainText(),
         requestMethod: RequestMethod.Post,
         data: {
           'star' : 0,
@@ -121,7 +122,7 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
           'background' : '',
           'text' : messageText,
           'category_id' : _categoryModel?.id ?? '',
-          'tag_id' : [],
+          'tag_id' : _selectedTag.map((e) => e.id).toList(),
           'is_pinned' : false,
         },
         onSuccess: (response) {

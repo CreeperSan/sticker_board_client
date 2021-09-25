@@ -18,6 +18,7 @@ class StickerPlainTextModel extends StickerModel{
     required int updateTime,
     required String title,
     required this.text,
+    required String category,
   }) : super (
     id: id,
     status: status,
@@ -29,6 +30,7 @@ class StickerPlainTextModel extends StickerModel{
     type: type,
     updateTime: updateTime,
     title: title,
+    category: category,
   );
 
   @override

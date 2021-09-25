@@ -55,50 +55,64 @@ class StickerBoardOperator extends StickerBoardInterface{
                 continue;
               }
               final itemType = responseDataItem['type'] ?? StickerType.Unknown;
+              final stickerTags = (responseDataItem['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? <String>[];
+              final stickerStatus = responseDataItem['status'] ?? StickerStatus.Processing;
+              final stickerStar = responseDataItem['star'] ?? 0;
+              final stickerIsPinned = responseDataItem['is_pinned'] ?? false;
+              final stickerBackground = responseDataItem['background'] ?? '';
+              final stickerCreateTime = responseDataItem['create_time'] ?? 0;
+              final stickerUpdateTime = responseDataItem['update_time'] ?? 0;
+              final stickerCategory = responseDataItem['category'] ?? '';
+              final stickerID = responseDataItem['id'] ?? '';
+              final stickerTitle = responseDataItem['title'] ?? '';
+
               switch(itemType){
                 case StickerType.PlainText:
                   stickerModelList.add(StickerPlainTextModel(
-                      id: responseDataItem['id'] ?? '',
-                      status: responseDataItem['status'] ?? StickerStatus.Processing,
-                      tags: responseDataItem['tags'] ?? [],
-                      star: responseDataItem['star'] ?? 0,
-                      isPinned: responseDataItem['is_pinned'] ?? false,
-                      background: responseDataItem['background'] ?? '',
-                      createTime: responseDataItem['create_time'] ?? 0,
-                      type: itemType,
-                      updateTime: responseDataItem['update_time'] ?? 0,
-                      title: responseDataItem['title'] ?? '',
-                      text: responseDataItem['text'] ?? '',
+                    id: stickerID,
+                    status: stickerStatus,
+                    tags: stickerTags,
+                    star: stickerStar,
+                    isPinned: stickerIsPinned,
+                    background: stickerBackground,
+                    createTime: stickerCreateTime,
+                    type: itemType,
+                    updateTime: stickerUpdateTime,
+                    category: stickerCategory,
+                    title: stickerTitle,
+                    text: responseDataItem['text'] ?? '',
                   ));
                   break;
                 case StickerType.PlainImage:
                   stickerModelList.add(StickerPlainImageModel(
-                    id: responseDataItem['id'] ?? '',
-                    status: responseDataItem['status'] ?? StickerStatus.Processing,
-                    tags: responseDataItem['tags'] ?? [],
-                    star: responseDataItem['star'] ?? 0,
-                    isPinned: responseDataItem['is_pinned'] ?? false,
-                    background: responseDataItem['background'] ?? '',
-                    createTime: responseDataItem['create_time'] ?? 0,
+                    id: stickerID,
+                    status: stickerStatus,
+                    tags: stickerTags,
+                    star: stickerStar,
+                    isPinned: stickerIsPinned,
+                    background: stickerBackground,
+                    createTime: stickerCreateTime,
                     type: itemType,
-                    updateTime: responseDataItem['update_time'] ?? 0,
-                    title: responseDataItem['title'] ?? '',
+                    category: stickerCategory,
+                    updateTime: stickerUpdateTime,
+                    title: stickerTitle,
                     imagePath: responseDataItem['url'] ?? '',
                     description: responseDataItem['description'] ?? '',
                   ));
                   break;
                 case StickerType.PlainSound:
                   stickerModelList.add(StickerPlainSoundModel(
-                    id: responseDataItem['id'] ?? '',
-                    status: responseDataItem['status'] ?? StickerStatus.Processing,
-                    tags: responseDataItem['tags'] ?? [],
-                    star: responseDataItem['star'] ?? 0,
-                    isPinned: responseDataItem['is_pinned'] ?? false,
-                    background: responseDataItem['background'] ?? '',
-                    createTime: responseDataItem['create_time'] ?? 0,
+                    id: stickerID,
+                    status: stickerStatus,
+                    tags: stickerTags,
+                    star: stickerStar,
+                    isPinned: stickerIsPinned,
+                    background: stickerBackground,
+                    createTime: stickerCreateTime,
+                    category: stickerCategory,
                     type: itemType,
-                    updateTime: responseDataItem['update_time'] ?? 0,
-                    title: responseDataItem['title'] ?? '',
+                    updateTime: stickerUpdateTime,
+                    title: stickerTitle,
                     url: responseDataItem['url'] ?? '',
                     description: responseDataItem['description'] ?? '',
                     duration: responseDataItem['duration'] ?? 0,
@@ -120,17 +134,18 @@ class StickerBoardOperator extends StickerBoardInterface{
                     }
                   }
                   stickerModelList.add(StickerTodoListModel(
-                    id: responseDataItem['id'] ?? '',
-                    status: responseDataItem['status'] ?? StickerStatus.Processing,
-                    tags: responseDataItem['tags'] ?? [],
-                    star: responseDataItem['star'] ?? 0,
-                    isPinned: responseDataItem['is_pinned'] ?? false,
-                    background: responseDataItem['background'] ?? '',
-                    createTime: responseDataItem['create_time'] ?? 0,
+                    id: stickerID,
+                    status: stickerStatus,
+                    tags: stickerTags,
+                    star: stickerStar,
+                    isPinned: stickerIsPinned,
+                    background: stickerBackground,
+                    createTime: stickerCreateTime,
                     type: itemType,
-                    updateTime: responseDataItem['update_time'] ?? 0,
-                    title: responseDataItem['title'] ?? '',
+                    updateTime: stickerUpdateTime,
+                    title: stickerTitle,
                     description: responseDataItem['description'] ?? '',
+                    category: stickerCategory,
                     todoList: todoList,
                   ));
                   break;

@@ -62,6 +62,7 @@ class StickerCategoryCache extends BaseCache<CategoryModel>{
             );
             categoryModelList.add(categoryModel);
           });
+          _cache = categoryModelList; // update cache
           return CacheFetchResponse<List<CategoryModel>>(
             isFetchSuccess: true,
             message: responseMessage,
@@ -93,6 +94,24 @@ class StickerCategoryCache extends BaseCache<CategoryModel>{
       source: CacheFetchSource.Cache,
       data: _cache,
     );
+  }
+
+  // TODO : Need Performance Optimise
+  CategoryModel? getCategoryModel(String id){
+
+    print('Compare Category -> cacheSize:${_cache.length}');
+
+    print('Compare Category -> target:$id');
+    if(id.isEmpty){
+      return null;
+    }
+    for(var categoryModel in _cache){
+      print('Compare Category -> original:${categoryModel.id}   target:$id');
+      if(categoryModel.id == id){
+        return categoryModel;
+      }
+    }
+    return null;
   }
 
   @override

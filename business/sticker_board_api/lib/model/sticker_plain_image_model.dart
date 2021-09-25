@@ -18,6 +18,7 @@ class StickerPlainImageModel extends StickerModel{
     required int type,
     required int updateTime,
     required String title,
+    required String category,
     required this.description,
     required this.imagePath,
   }) : super (
@@ -31,6 +32,7 @@ class StickerPlainImageModel extends StickerModel{
     type: type,
     updateTime: updateTime,
     title: title,
+    category: category,
   );
 
   @override

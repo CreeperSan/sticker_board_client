@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:sticker_board/widget/sticker/common/sticker_widget_common_part_builder.dart';
 import 'package:sticker_board_api/model/sticker_todo_list_model.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
 
@@ -91,8 +92,11 @@ class TodoListStickerWidget extends StatelessWidget{
                 );
               }).toList(),
             ),
-          )
+          ),
 
+
+          // Category & Tags
+          StickerWidgetCommonPartBuilder.buildCategoryAndTagPart(model),
         ],
       ),
     );

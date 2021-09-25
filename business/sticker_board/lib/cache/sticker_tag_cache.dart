@@ -56,6 +56,7 @@ class StickerTagCache extends BaseCache<CacheFetchResponse<List<TagModel>>> {
                   );
                   tagModelList.add(tagModel);
                 });
+                _cache = tagModelList; // update cache
                 return CacheFetchResponse<List<TagModel>>(
                   isFetchSuccess: true,
                   message: responseMessage,
@@ -93,6 +94,19 @@ class StickerTagCache extends BaseCache<CacheFetchResponse<List<TagModel>>> {
   Future<bool> clear() {
     _cache.clear();
     return Future.value(true);
+  }
+
+  // TODO : Need performance optimise
+  TagModel? getTagModel(String id){
+    if(id.isEmpty){
+      return null;
+    }
+    for(dynamic tagModel in _cache){
+      if(tagModel.id == id){
+        return tagModel;
+      }
+    }
+    return null;
   }
 
 }
