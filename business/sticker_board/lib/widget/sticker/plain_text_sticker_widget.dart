@@ -21,6 +21,7 @@ class PlainTextStickerWidget extends StatelessWidget{
       ),
       padding: EdgeInsets.only(
         top: 8,
+        bottom: 8,
       ),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -60,7 +61,12 @@ class PlainTextStickerWidget extends StatelessWidget{
           ),
 
           // Category & Tags
-          StickerWidgetCommonPartBuilder.buildCategoryAndTagPart(model),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 12,
+            ),
+            child: StickerWidgetCommonPartBuilder.buildCategoryAndTagPart(model),
+          ),
 
         ],
       ),

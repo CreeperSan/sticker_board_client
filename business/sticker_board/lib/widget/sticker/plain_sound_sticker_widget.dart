@@ -61,7 +61,12 @@ class PlainSoundStickerWidget extends StatelessWidget{
               ),
 
               // Category & Tags
-              StickerWidgetCommonPartBuilder.buildCategoryAndTagPart(model),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                ),
+                child: StickerWidgetCommonPartBuilder.buildCategoryAndTagPart(model),
+              ),
             ],
           ),
         ),
