@@ -1,11 +1,10 @@
 
 import 'package:log/log.dart';
-import 'package:network/network.dart';
 import 'package:flutter/material.dart';
-import 'package:sticker_board/operator/category_operator.dart';
+import 'package:sticker_board/cache/sticker_category_cache.dart';
+import 'package:sticker_board/cache/sticker_tag_cache.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
 
-import 'package:sticker_board/operator/tag_operator.dart';
 import 'package:sticker_board/enum/network_loading_state.dart';
 
 class IndexModule with ChangeNotifier{
@@ -19,40 +18,42 @@ class IndexModule with ChangeNotifier{
   NetworkLoadingState stickerLoadingState = NetworkLoadingState.Idle;
   List<StickerModel> stickerList = [];
 
-  void loadTag(){
+  Future loadTag(){
     tagLoadingState = NetworkLoadingState.Loading;
     notifyListeners();
 
-    TagOperator.instance.getTagList(
-      onSuccess: (networkTagList){
+    return StickerTagCache.instance.fetch(forceRefresh: true).then((response){
+      if(response.isFetchSuccess){
         tagList.clear();
-        tagList.addAll(networkTagList);
-        tagLoadingState = NetworkLoadingState.Success;
-        notifyListeners();
-      },
-      onFail: (errCode, errMessage){
-        tagLoadingState = NetworkLoadingState.Fail;
-        notifyListeners();
+        tagList.addAll(response.data);
       }
-    );
+      return response;
+    }).then((response){
+      tagLoadingState = response.isFetchSuccess ? NetworkLoadingState.Success : NetworkLoadingState.Fail;
+      notifyListeners();
+    }).catchError((onError){
+      tagLoadingState = NetworkLoadingState.Fail;
+      notifyListeners();
+    });
   }
 
-  void loadCategory(){
+  Future loadCategory(){
     categoryLoadingState = NetworkLoadingState.Loading;
     notifyListeners();
 
-    CategoryOperator.instance.getCategoryList(
-      onSuccess: (networkCategoryList){
+    return StickerCategoryCache.instance.fetch(forceRefresh: true).then((response){
+      if(response.isFetchSuccess){
         categoryList.clear();
-        categoryList.addAll(networkCategoryList);
-        categoryLoadingState = NetworkLoadingState.Success;
-        notifyListeners();
-      },
-      onFail: (errCode, errMessage){
-        categoryLoadingState = NetworkLoadingState.Fail;
-        notifyListeners();
+        categoryList.addAll(response.data);
       }
-    );
+      return response;
+    }).then((response){
+      categoryLoadingState = response.isFetchSuccess ? NetworkLoadingState.Success : NetworkLoadingState.Fail;
+      notifyListeners();
+    }).catchError((onError){
+      categoryLoadingState = NetworkLoadingState.Fail;
+      notifyListeners();
+    });
   }
 
   void loadStickerModel(){
