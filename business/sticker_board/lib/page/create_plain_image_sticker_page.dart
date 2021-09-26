@@ -6,13 +6,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:log/log.dart';
 import 'package:network/manager/network_manager.dart';
+import 'package:network/network.dart';
+import 'package:sticker_board/cache/sticker_category_cache.dart';
+import 'package:sticker_board/cache/sticker_tag_cache.dart';
+import 'package:sticker_board/page/choose_sticker_category_page.dart';
+import 'package:sticker_board/page/choose_sticker_tag_page.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
 import 'package:sticker_board_api/sticker_board_managers.dart';
 import 'package:toast/manager/toast_manager.dart';
 import 'package:formatter/formatter.dart';
 import 'package:kv_storage/kv_storage.dart';
+import 'package:url_builder/url_builder.dart';
 
 class CreatePlainImageStickerPage extends StatefulWidget {
+  late StickerPlainImageModel stickerModel;
+
+  CreatePlainImageStickerPage({
+    StickerPlainImageModel? sticker,
+  }){
+    stickerModel = sticker ?? StickerPlainImageModel.createEmpty();
+  }
 
   @override
   State<StatefulWidget> createState() => _CreatePlainImageStickerPageState();
@@ -24,6 +37,24 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
   final TextEditingController _descriptionEditController = TextEditingController();
 
   String imagePath = '';
+
+  CategoryModel? _categoryModel;
+  List<TagModel> _selectedTag = <TagModel>[];
+
+  @override
+  void initState() {
+    super.initState();
+    // Init data
+    _titleEditController.text = widget.stickerModel.title;
+    _descriptionEditController.text = widget.stickerModel.description;
+    _categoryModel = StickerCategoryCache.instance.getCategoryModel(widget.stickerModel.category);
+    widget.stickerModel.tags.forEach((tagID) {
+      final tagModel = StickerTagCache.instance.getTagModel(tagID);
+      if(tagModel != null){
+        _selectedTag.add(tagModel);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +81,39 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
               decoration: InputDecoration(
                 hintText: 'Title',
               ),
+            ),
+            ListTile(
+              leading: Icon(Icons.category),
+              title: Text('Category'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if(_categoryModel != null) Text(_categoryModel?.name ?? '<Unnamed Category>'),
+                  Icon(Icons.chevron_right),
+                ],
+              ),
+              onTap: _onCategoryClick,
+            ),
+            ListTile(
+              leading: Icon(Icons.tag),
+              title: Text('Tag'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if(_selectedTag.isNotEmpty) Text(_selectedTag.combineAll((index, item, result){
+                    if(result == null || result.toString().trim().isEmpty){
+                      return item.name;
+                    } else {
+                      return '$result, ${item.name}';
+                    }
+                  }),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Icon(Icons.chevron_right),
+                ],
+              ),
+              onTap: _onTagClick,
             ),
             TextField(
               controller: _descriptionEditController,
@@ -128,24 +192,76 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
     OSSUploader.instance.uploadFile(file, uid, token, 'create_sticker_plain_image',
       onSuccess: (path, bucket){
         // 2. Add sticker to server
-        StickerBoardManager.instance.createStickerPlainImage(
-          imagePath: path,
-          title: _titleEditController.text.trim(),
-          description: _descriptionEditController.text,
-          onSuccess: (){
+        NetworkManager.instance.rawFetch(URLBuilder.stickerCreatePlainImage(),
+            requestMethod: RequestMethod.Post,
+            jsonData: {
+              'star' : 0,
+              'status' : StickerStatus.Processing,
+              'title' : _titleEditController.text.trim(),
+              'background' : '',
+              'category_id' : _categoryModel?.id ?? '',
+              'tag_id' : _selectedTag.map((e) => e.id).toList(),
+              'is_pinned' : false,
+              'description' : _descriptionEditController.text,
+              'image_path' : path,
+            },
+        ).then((response){
+          final responseCode = response.data['code'];
+          final responseMessage = response.data['msg'];
+          if(responseCode == 200){
             ToastManager.show('Sticker create success.');
             Navigator.pop(context);
-          },
-          onFail: (code, msg){
-            ToastManager.show(msg);
+          } else {
+            ToastManager.show(responseMessage);
           }
-        );
+        }).catchError((error){
+          print(error);
+          ToastManager.show('Create plain image sticker fail, please try again later.');
+        });
       },
       onFail: (code, message){
         ToastManager.show(message);
       },
     );
 
+  }
+
+  void _onCategoryClick(){
+    Navigator.push(context, MaterialPageRoute(
+        builder: (routeContext){
+          return ChooseStickerCategoryPage();
+        }
+    )).then((value){
+      if(value == null){
+        return;
+      }
+      if(value is ChooseStickerCategoryPageResponse){
+        if(value.isChoose) {
+          _categoryModel = value.categoryModel;
+          setState(() { });
+        }
+      }
+    });
+  }
+
+  void _onTagClick(){
+    Navigator.push(context, MaterialPageRoute(
+        builder: (routeContext){
+          return ChooseStickerTagPage(
+            selectedTags: _selectedTag.map((e) => e.id).toList(),
+          );
+        }
+    )).then((value){
+      if(value == null){
+        return;
+      }
+      if(value is ChooseStickerTagResponse){
+        if(value.isConfirm) {
+          _selectedTag = value.tagList;
+          setState(() { });
+        }
+      }
+    });
   }
 
 }
