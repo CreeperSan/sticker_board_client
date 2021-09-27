@@ -13,6 +13,7 @@ import 'package:sticker_board/module/index_module.dart';
 import 'package:sticker_board/operator/sticker_board_operator.dart';
 import 'package:sticker_board/operator/tag_operator.dart';
 import 'package:sticker_board/page/create_plain_text_sticker_page.dart';
+import 'package:sticker_board/page/create_todo_list_sticker_page.dart';
 import 'package:sticker_board/page/sticker_type_select_to_create_page.dart';
 import 'package:sticker_board/widget/category_widget.dart';
 import 'package:sticker_board/widget/drawer_group_widget.dart';
@@ -306,7 +307,9 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
                     } else if(stickerModel is StickerPlainSoundModel){ /////////
                       return PlainSoundStickerWidget(stickerModel);
                     } else if(stickerModel is StickerTodoListModel){ ///////////
-                      return TodoListStickerWidget(stickerModel);
+                      return TodoListStickerWidget(stickerModel,
+                        onClick: () =>  _onTodoListStickerClicked(stickerModel),
+                      );
                     } else { ///////////////////////////////////////////////////
                       return Container(
                         child: Text('Not supported yet, please update to newest version.'),
@@ -353,6 +356,16 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
           sticker: stickerModel,
         );
       }
+    ));
+  }
+
+  void _onTodoListStickerClicked(StickerTodoListModel stickerModel){
+    Navigator.push(context, MaterialPageRoute(
+        builder: (routeContext) {
+          return CreateTodoListStickerPage(
+            sticker: stickerModel,
+          );
+        }
     ));
   }
 
