@@ -12,6 +12,8 @@ import 'package:sticker_board/model/page/tag_add_page_result_model.dart';
 import 'package:sticker_board/module/index_module.dart';
 import 'package:sticker_board/operator/sticker_board_operator.dart';
 import 'package:sticker_board/operator/tag_operator.dart';
+import 'package:sticker_board/page/create_plain_image_sticker_page.dart';
+import 'package:sticker_board/page/create_plain_sound_sticker_page.dart';
 import 'package:sticker_board/page/create_plain_text_sticker_page.dart';
 import 'package:sticker_board/page/create_todo_list_sticker_page.dart';
 import 'package:sticker_board/page/sticker_type_select_to_create_page.dart';
@@ -303,9 +305,13 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
                         onClick: () => _onPlainTextStickerClicked(stickerModel),
                       );
                     } else if(stickerModel is StickerPlainImageModel){ /////////
-                      return PlainImageStickerWidget(stickerModel);
+                      return PlainImageStickerWidget(stickerModel,
+                        onClick: () => _onPlainImageStickerClicked(stickerModel),
+                      );
                     } else if(stickerModel is StickerPlainSoundModel){ /////////
-                      return PlainSoundStickerWidget(stickerModel);
+                      return PlainSoundStickerWidget(stickerModel,
+                        onClick: () => _onPlainSoundStickerClicked(stickerModel),
+                      );
                     } else if(stickerModel is StickerTodoListModel){ ///////////
                       return TodoListStickerWidget(stickerModel,
                         onClick: () =>  _onTodoListStickerClicked(stickerModel),
@@ -356,6 +362,26 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
           sticker: stickerModel,
         );
       }
+    ));
+  }
+
+  void _onPlainImageStickerClicked(StickerPlainImageModel stickerModel){
+    Navigator.push(context, MaterialPageRoute(
+        builder: (routeContext){
+          return CreatePlainImageStickerPage(
+            sticker: stickerModel,
+          );
+        }
+    ));
+  }
+
+  void _onPlainSoundStickerClicked(StickerPlainSoundModel stickerModel){
+    Navigator.push(context, MaterialPageRoute(
+        builder: (routeContext){
+          return CreatePlainSoundStickerPage(
+            sticker: stickerModel,
+          );
+        }
     ));
   }
 

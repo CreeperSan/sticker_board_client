@@ -12,6 +12,13 @@ import 'package:kv_storage/kv_storage.dart';
 import 'package:toast/toast.dart';
 
 class CreatePlainSoundStickerPage extends StatefulWidget{
+  late StickerPlainSoundModel stickerModel;
+
+  CreatePlainSoundStickerPage({
+    StickerPlainSoundModel? sticker,
+  }){
+    stickerModel = sticker ?? StickerPlainSoundModel.createEmpty();
+  }
 
   @override
   State<StatefulWidget> createState() {

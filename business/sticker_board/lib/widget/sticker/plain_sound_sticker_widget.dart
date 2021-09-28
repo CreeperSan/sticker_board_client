@@ -5,12 +5,15 @@ import 'package:sticker_board_api/sticker_board_api.dart';
 
 class PlainSoundStickerWidget extends StatelessWidget{
   final StickerPlainSoundModel model;
+  final void Function()? onClick;
 
-  PlainSoundStickerWidget(this.model);
+  PlainSoundStickerWidget(this.model, {
+    this.onClick,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
+    Widget widget = ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(4)),
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -72,6 +75,15 @@ class PlainSoundStickerWidget extends StatelessWidget{
         ),
       ),
     );
+
+    if(onClick != null){
+      widget = GestureDetector(
+        onTap: () => onClick?.call(),
+        child: widget,
+      );
+    }
+
+    return widget;
   }
 
 }

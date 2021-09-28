@@ -1,10 +1,30 @@
 
 import 'package:sticker_board_api/model/sticker_model.dart';
+import 'package:sticker_board_api/sticker_board_api.dart';
 
 class StickerPlainSoundModel extends StickerModel{
   int duration;
   String description;
   String url;
+
+  factory StickerPlainSoundModel.createEmpty(){
+    return StickerPlainSoundModel(
+      id: '',
+      status: StickerStatus.Pending,
+      tags: [],
+      star: 0,
+      isPinned: false,
+      background: '',
+      createTime: 0,
+      type: StickerType.PlainText,
+      updateTime: 0,
+      title: '',
+      description: '',
+      category: '',
+      url: '',
+      duration: 0,
+    );
+  }
 
   StickerPlainSoundModel({
     required String id,

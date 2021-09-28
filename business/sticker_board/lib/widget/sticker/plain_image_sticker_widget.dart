@@ -5,12 +5,15 @@ import 'package:sticker_board_api/sticker_board_api.dart';
 
 class PlainImageStickerWidget extends StatelessWidget{
   final StickerPlainImageModel model;
+  final void Function()? onClick;
 
-  PlainImageStickerWidget(this.model);
+  PlainImageStickerWidget(this.model, {
+    this.onClick,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
+    Widget widget = ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(4)),
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -75,6 +78,15 @@ class PlainImageStickerWidget extends StatelessWidget{
         ),
       ),
     );
+
+    if(onClick != null){
+      widget = GestureDetector(
+        onTap: () => onClick?.call(),
+        child: widget,
+      );
+    }
+
+    return widget;
   }
 
 }

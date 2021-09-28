@@ -35,7 +35,9 @@ class URLBuilder {
   static String stickerCreatePlainText() => '${getHostAddress()}/api/sticker/v1/plain_text/create';
   static String stickerUpdatePlainText() => '${getHostAddress()}/api/sticker/v1/plain_text/update';
   static String stickerCreatePlainImage() => '${getHostAddress()}/api/sticker/v1/plain_image/create';
+  static String stickerUpdatePlainImage() => '${getHostAddress()}/api/sticker/v1/plain_image/update';
   static String stickerCreatePlainSound() => '${getHostAddress()}/api/sticker/v1/plain_sound/create';
+  static String stickerUpdatePlainSound() => '${getHostAddress()}/api/sticker/v1/plain_sound/update';
   static String stickerCreateTodoList() => '${getHostAddress()}/api/sticker/v1/todo_list/create';
   static String stickerUpdateTodoList() => '${getHostAddress()}/api/sticker/v1/todo_list/update';
   static String stickerDelete() => '${getHostAddress()}/api/sticker/v1/delete';
