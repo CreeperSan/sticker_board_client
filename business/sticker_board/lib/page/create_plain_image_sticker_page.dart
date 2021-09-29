@@ -17,6 +17,7 @@ import 'package:toast/manager/toast_manager.dart';
 import 'package:formatter/formatter.dart';
 import 'package:kv_storage/kv_storage.dart';
 import 'package:url_builder/url_builder.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CreatePlainImageStickerPage extends StatefulWidget {
   late StickerPlainImageModel stickerModel;
@@ -136,10 +137,25 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
               trailing: Icon(Icons.chevron_right),
               onTap: () => _onPickImage(context),
             ),
+            if(imagePath.startsWith('http://') || imagePath.startsWith('https://')) ListTile(
+              title: Text('Preview'),
+              trailing: Icon(Icons.open_in_new),
+              onTap: _onPreviewTap,
+            )
           ],
         ),
       ),
     );
+  }
+
+  void _onPreviewTap(){
+    canLaunch(imagePath).then((canLaunch){
+      if(canLaunch){
+        launch(imagePath);
+      } else {
+        ToastManager.show('Can not preview this image');
+      }
+    });
   }
 
   void _onPickImage(BuildContext context){
