@@ -16,10 +16,12 @@ import 'package:sticker_board/page/create_plain_image_sticker_page.dart';
 import 'package:sticker_board/page/create_plain_sound_sticker_page.dart';
 import 'package:sticker_board/page/create_plain_text_sticker_page.dart';
 import 'package:sticker_board/page/create_todo_list_sticker_page.dart';
+import 'package:sticker_board/page/setting/setting_page.dart';
 import 'package:sticker_board/page/sticker_type_select_to_create_page.dart';
 import 'package:sticker_board/widget/category_widget.dart';
 import 'package:sticker_board/widget/drawer_group_widget.dart';
 import 'package:sticker_board/widget/drawer_hint_widget.dart';
+import 'package:sticker_board/widget/drawer_normal_tile.dart';
 import 'package:sticker_board/widget/index_create_sticker_header_widget.dart';
 import 'package:sticker_board/widget/sticker/plain_image_sticker_widget.dart';
 import 'package:sticker_board/widget/sticker/plain_sound_sticker_widget.dart';
@@ -111,6 +113,7 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
                   _buildDrawerCommonGroup(),
                   _buildDrawerCategoryGroup(),
                   _buildDrawerTagGroup(),
+                  _buildOtherGroup(),
                 ],
               ),
             ),
@@ -216,6 +219,23 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
     );
   }
 
+  Widget _buildOtherGroup(){
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        DrawerGroupWidget(
+          name: 'Setting',
+          state: NetworkLoadingState.Success,
+        ),
+        DrawerNormalTile(
+          icon: Icon(Icons.settings),
+          title: 'Setting',
+          onClick: _onSettingClick,
+        ),
+      ],
+    );
+  }
+
   void _onAddTagPressed(IndexModule module){
     Navigator.pushNamed(context, '/sticker_board/tag/add').then((response){
       if(response is TagAddPageResultModel){
@@ -260,6 +280,14 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
     LogManager.d('All sticker board has been pressed.', TAG);
     module.resetFilter();
     Navigator.pop(context); // close drawer
+  }
+
+  void _onSettingClick(){
+    Navigator.push(context, MaterialPageRoute(
+      builder: (routeContext){
+        return SettingPage();
+      }
+    ));
   }
 
   // void _onStickerBoardArchivePressed(){
