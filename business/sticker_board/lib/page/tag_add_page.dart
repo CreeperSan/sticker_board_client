@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:i18n/i18n.dart';
 import 'package:sticker_board/model/page/tag_add_page_result_model.dart';
 import 'package:sticker_board/module/tag_add_module.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,7 @@ class _TagAddPageState extends State<TagAddPage>{
       builder: (providerContext, child){
         return Scaffold(
           appBar: AppBar(
-            title: Text('Add Tag'),
+            title: Text(i18n.str('CreateTag_Title')),
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -48,7 +49,7 @@ class _TagAddPageState extends State<TagAddPage>{
                   TextField(
                     controller: _nameTextController,
                     decoration: InputDecoration(
-                      labelText: 'Name',
+                      labelText: i18n.str('CreateTag_HintTagName'),
                     ),
                   ),
                   Divider(
@@ -57,7 +58,7 @@ class _TagAddPageState extends State<TagAddPage>{
                   Consumer<TagAddModule>(
                     builder: (consumerContext, module, child){
                       return module.tagAddNetworkState == NetworkLoadingState.Loading ? CupertinoActivityIndicator() : StickerBoardActionButton(
-                        name: 'Create Tag',
+                        name: i18n.str('CreateTag_ButtonCreateTag'),
                         onPressed: () => _onCreateTagPressed(module),
                       );
                     },
@@ -77,7 +78,7 @@ class _TagAddPageState extends State<TagAddPage>{
     print('name -> '+name);
 
     if(name.isEmpty){
-      ToastManager.show('Please enter tag name');
+      ToastManager.show(i18n.str('CreateTag_ToastEnterTagName'));
       return;
     }
 
@@ -89,7 +90,7 @@ class _TagAddPageState extends State<TagAddPage>{
         ));
       },
       onFail: (errCode, errMessage){
-        ToastManager.show('Create tag failed, $errMessage');
+        ToastManager.show(i18n.tr('CreateTag_ToastTagCreateFailed', errMessage));
       },
     );
 

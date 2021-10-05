@@ -2,6 +2,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:i18n/i18n.dart';
 import 'package:sticker_board/cache/sticker_tag_cache.dart';
 import 'package:sticker_board_api/model/tag_model.dart';
 
@@ -39,7 +40,7 @@ class _ChooseStickerTagPageState extends State<ChooseStickerTagPage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Choose Tag'),
+        title: Text(i18n.str('ChooseTag_Title')),
         leading: IconButton(
           icon: Icon(Icons.close),
           onPressed: _onBackPressed,
@@ -89,14 +90,14 @@ class _ChooseStickerTagPageState extends State<ChooseStickerTagPage>{
   Future _onLoad({
     bool loadFromInternet = false,
   }) async {
-    _hintMessage = 'Loading...';
+    _hintMessage = i18n.str('ChooseTag_HintLoading');
     setState(() { });
 
     return StickerTagCache.instance.fetch(forceRefresh: loadFromInternet).then((response){
       _tagModelList.clear();
       if(response.isFetchSuccess){
         if(response.data.isEmpty){
-          _hintMessage = 'Empty';
+          _hintMessage = i18n.str('ChooseTag_HintEmpty');
         } else {
           _tagModelList.addAll(response.data);
           _hintMessage = '';

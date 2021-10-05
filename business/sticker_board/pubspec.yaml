@@ -32,6 +32,8 @@ dependencies:
     path: ../../base/formatter
   i18n:
     path: ../../base/i18n
+  application_config:
+    path: ../application_config
 
 dev_dependencies:
   flutter_test:

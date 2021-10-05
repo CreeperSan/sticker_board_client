@@ -50,6 +50,8 @@ dependencies:
     path: business/file_uploader
   url_builder:
     path: business/url_builder
+  application_config:
+    path: business/application_config
 
 dev_dependencies:
   flutter_test:

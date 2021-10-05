@@ -4,6 +4,7 @@ import 'package:file_uploader/file_uploader.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:i18n/i18n.dart';
 import 'package:log/log.dart';
 import 'package:network/manager/network_manager.dart';
 import 'package:network/network.dart';
@@ -71,10 +72,10 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
     return Scaffold(
       backgroundColor: Color(0xFFF2F5F7),
       appBar: AppBar(
-        title: Text('${isCreateSticker ? 'Create': 'Edit'} Plain Image Sticker'),
+        title: Text(i18n.str(isCreateSticker ? 'CreateImageSticker_TitleCreate' : 'CreateImageSticker_TitleEdit')),
         actions: [
           CupertinoButton(
-            child: Text(isCreateSticker ? 'Create' : 'Update',
+            child: Text(i18n.str(isCreateSticker ? 'CreateImageSticker_ActionCreate' : 'CreateImageSticker_ActionEdit'),
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -89,16 +90,16 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
             TextField(
               controller: _titleEditController,
               decoration: InputDecoration(
-                hintText: 'Title',
+                hintText: i18n.str('CreateImageSticker_PlaceHolderTitle'),
               ),
             ),
             ListTile(
               leading: Icon(Icons.category),
-              title: Text('Category'),
+              title: Text(i18n.str('CreateImageSticker_ParamsCategory')),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if(_categoryModel != null) Text(_categoryModel?.name ?? '<Unnamed Category>'),
+                  if(_categoryModel != null) Text(_categoryModel?.name ?? i18n.str('CreateImageSticker_ValueUnknownCategory')),
                   Icon(Icons.chevron_right),
                 ],
               ),
@@ -106,7 +107,7 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
             ),
             ListTile(
               leading: Icon(Icons.tag),
-              title: Text('Tag'),
+              title: Text(i18n.str('CreateImageSticker_ParamsTag')),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -128,17 +129,17 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
             TextField(
               controller: _descriptionEditController,
               decoration: InputDecoration(
-                hintText: 'Description ( Also used to search this sticker )',
+                hintText: i18n.str('CreateImageSticker_ParamsDescription'),
               ),
             ),
             ListTile(
-              title: Text('Image'),
-              subtitle: Text(imagePath.isEmpty ? 'Not selected yet' : imagePath),
+              title: Text(i18n.str('CreateImageSticker_ParamsImage')),
+              subtitle: Text(imagePath.isEmpty ? i18n.str('CreateImageSticker_ValueImageNotSelected') : imagePath),
               trailing: Icon(Icons.chevron_right),
               onTap: () => _onPickImage(context),
             ),
             if(imagePath.startsWith('http://') || imagePath.startsWith('https://')) ListTile(
-              title: Text('Preview'),
+              title: Text(i18n.str('CreateImageSticker_ParamsPreview')),
               trailing: Icon(Icons.open_in_new),
               onTap: _onPreviewTap,
             )
@@ -153,7 +154,7 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
       if(canLaunch){
         launch(imagePath);
       } else {
-        ToastManager.show('Can not preview this image');
+        ToastManager.show(i18n.str('CreateImageSticker_HintPreviewFailed'));
       }
     });
   }
@@ -180,7 +181,7 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
       final path = fileList.first.path;
       final pathFileExtension = path.pathFileExtension();
       if(!isImageFileExtension(pathFileExtension)){
-        ToastManager.show('The file your selected is not an image, please choose an image file.');
+        ToastManager.show(i18n.str('CreateImageSticker_HintFileNotImage'));
         return;
       }
 
@@ -188,22 +189,22 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
       setState(() { });
     }).catchError((error){
       LogManager.w('Error occur while selecting image in CreatePlainImageStickerPage, error=$error', this.runtimeType);
-      ToastManager.show('Error, please try again later');
+      ToastManager.show(i18n.str('CreateImageSticker_HintErrorTryAgain'));
     });
   }
 
   void _onCreateSticker(BuildContext context){
     if(imagePath.isEmpty){
-      ToastManager.show('Please choose an image file to upload');
+      ToastManager.show('CreateImageSticker_HintChooseUpload'.i18n());
       return;
     }
     if(!FileSystemEntity.isFileSync(imagePath)){
-      ToastManager.show('The path your choose is not a file.');
+      ToastManager.show('CreateImageSticker_HintFileNotExist'.i18n());
       return;
     }
     final file = File(imagePath);
     if(!file.existsSync()){
-      ToastManager.show('The file has been deleted, please choose another file.');
+      ToastManager.show('CreateImageSticker_HintFileNotExist'.i18n());
       return;
     }
     // 1. Upload file to file server
@@ -213,7 +214,7 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
       ToastManager.show('Login expired. Please login again.');
       return;
     }
-    ToastManager.show('Uploading...');
+    ToastManager.show('CreateImageSticker_HintUploading'.i18n());
     OSSUploader.instance.uploadFile(file, uid, token, 'create_sticker_plain_image',
       onSuccess: (path, bucket){
         // 2. Add sticker to server
@@ -241,7 +242,7 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
           }
         }).catchError((error){
           print(error);
-          ToastManager.show('Create plain image sticker fail, please try again later.');
+          ToastManager.show('CreateImageSticker_HintCreateFailed'.i18n());
         });
       },
       onFail: (code, message){
@@ -254,7 +255,7 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
   void _onUpdateSticker(BuildContext context){
     // 1. Image path can not be empty
     if(imagePath.isEmpty){
-      ToastManager.show('Please choose an image file to upload');
+      ToastManager.show('CreateImageSticker_HintSelectFileToUpload'.i18n());
       return;
     }
     // 2. check whether new image url is already uploaded
@@ -266,7 +267,7 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
       // Check file path is exist
       final file = File(imagePath);
       if(!file.existsSync()){
-        ToastManager.show('The file has been deleted, please choose another file.');
+        ToastManager.show('CreateImageSticker_HintFileNotExist'.i18n());
         return;
       }
       // Upload file to file server
@@ -308,14 +309,14 @@ class _CreatePlainImageStickerPageState extends State<CreatePlainImageStickerPag
       final responseCode = response.data['code'];
       final responseMessage = response.data['msg'];
       if(responseCode == 200){
-        ToastManager.show('Sticker create success.');
+        ToastManager.show('CreateImageSticker_HintCreateSuccess'.i18n());
         Navigator.pop(context);
       } else {
         ToastManager.show(responseMessage);
       }
     }).catchError((error){
       print(error);
-      ToastManager.show('Create plain image sticker fail, please try again later.');
+      ToastManager.show('CreateImageSticker_HintCreateFail'.i18n());
     });
   }
 

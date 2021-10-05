@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:i18n/i18n.dart';
 import 'package:provider/provider.dart';
 import 'package:sticker_board/enum/network_loading_state.dart';
 import 'package:sticker_board/model/page/category_add_page_result_model.dart';
@@ -35,7 +36,7 @@ class _CategoryAddPageState extends State<CategoryAddPage>{
       builder: (providerContext, child){
         return Scaffold(
           appBar: AppBar(
-            title: Text('Add Category'),
+            title: Text(i18n.str('CreateCategory_Title')),
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -48,7 +49,7 @@ class _CategoryAddPageState extends State<CategoryAddPage>{
                   TextField(
                     controller: _nameTextController,
                     decoration: InputDecoration(
-                      labelText: 'Name',
+                      labelText: i18n.str('CreateCategory_CategoryNameHint'),
                     ),
                   ),
                   Divider(
@@ -57,7 +58,7 @@ class _CategoryAddPageState extends State<CategoryAddPage>{
                   Consumer<CategoryAddModule>(
                     builder: (consumerContext, module, child){
                       return module.addCategoryNetworkState == NetworkLoadingState.Loading ? CupertinoActivityIndicator() : StickerBoardActionButton(
-                        name: 'Create Category',
+                        name: i18n.str('CreateCategory_CreateCategory'),
                         onPressed: () => _onCreateCategoryPressed(module),
                       );
                     },
@@ -77,7 +78,7 @@ class _CategoryAddPageState extends State<CategoryAddPage>{
     print('name -> '+name);
 
     if(name.isEmpty){
-      ToastManager.show('Please enter category name');
+      ToastManager.show(i18n.str('CreateCategory_ToastEnterCategoryName'));
       return;
     }
 
@@ -89,7 +90,7 @@ class _CategoryAddPageState extends State<CategoryAddPage>{
         ));
       },
       onFail: (errCode, errMessage){
-        ToastManager.show('Create category failed, $errMessage');
+        ToastManager.show(i18n.tr('CreateCategory_ToastCategoryCreateFailed', errMessage));
       },
     );
   }

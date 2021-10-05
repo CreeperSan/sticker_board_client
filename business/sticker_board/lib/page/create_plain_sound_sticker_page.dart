@@ -6,6 +6,7 @@ import 'package:file_uploader/file_uploader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:formatter/formatter.dart';
+import 'package:i18n/i18n.dart';
 import 'package:log/log.dart';
 import 'package:network/enum/request_method.dart';
 import 'package:network/manager/network_manager.dart';
@@ -70,10 +71,10 @@ class _CreatePlainSoundStickerPageState extends State<CreatePlainSoundStickerPag
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${isCreateSticker ? 'Create': 'Edit'} Plain Sound Sticker'),
+        title: Text(i18n.str(isCreateSticker ? 'CreateSoundSticker_TitleCreate': 'CreateSoundSticker_TitleEdit')),
         actions: [
           CupertinoButton(
-            child: Text(isCreateSticker ? 'Create' : 'Update',
+            child: Text(i18n.str(isCreateSticker ? 'CreateSoundSticker_ActionCreate' : 'CreateSoundSticker_ActionEdit'),
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -88,23 +89,23 @@ class _CreatePlainSoundStickerPageState extends State<CreatePlainSoundStickerPag
             TextField(
               controller: _soundTitleController,
               decoration: InputDecoration(
-                hintText: 'Title',
+                hintText: 'CreateSoundSticker_ParamsTitle'.i18n(),
               ),
             ),
             TextField(
               controller: _soundDescriptionController,
               decoration: InputDecoration(
-                hintText: 'Description',
+                hintText: 'CreateSoundSticker_ParamsDescription'.i18n(),
               ),
             ),
             ListTile(
-              title: Text('Sound'),
-              subtitle: Text(_soundPath.isEmpty ? 'Not selected yet' : _soundPath),
+              title: Text('CreateSoundSticker_ParamsSound'.i18n()),
+              subtitle: Text(_soundPath.isEmpty ? 'CreateSoundSticker_ValueSound'.i18n() : _soundPath),
               trailing: Icon(Icons.chevron_right),
               onTap: () => _onPickSound(context),
             ),
             if(_soundPath.startsWith('http://') || _soundPath.startsWith('https://')) ListTile(
-              title: Text('Preview'),
+              title: Text('CreateSoundSticker_ParamsPreview'.i18n()),
               trailing: Icon(Icons.open_in_new),
               onTap: _onPreviewTap,
             )
@@ -136,7 +137,7 @@ class _CreatePlainSoundStickerPageState extends State<CreatePlainSoundStickerPag
       final path = fileList.first.path;
       final pathFileExtension = path.pathFileExtension();
       if(!isSoundExtension(pathFileExtension)){
-        ToastManager.show('The file your selected is not sound file, please choose another one.');
+        ToastManager.show('CreateSoundSticker_HintNotValidSound'.i18n());
         return;
       }
 
@@ -144,7 +145,7 @@ class _CreatePlainSoundStickerPageState extends State<CreatePlainSoundStickerPag
       setState(() { });
     }).catchError((error){
       LogManager.w('Error occur while selecting sound in CreatePlainSoundStickerPage, error=$error', this.runtimeType);
-      ToastManager.show('Error, please try again later');
+      ToastManager.show('CreateSoundSticker_HintError'.i18n());
     });
   }
 
@@ -153,7 +154,7 @@ class _CreatePlainSoundStickerPageState extends State<CreatePlainSoundStickerPag
       if(canLaunch){
         launch(_soundPath);
       } else {
-        ToastManager.show('Can not preview this image');
+        ToastManager.show('CreateSoundSticker_HintPreviewError'.i18n());
       }
     });
   }
@@ -162,17 +163,17 @@ class _CreatePlainSoundStickerPageState extends State<CreatePlainSoundStickerPag
     LogManager.i('Create Plain Sound Sticker', this.runtimeType);
 
     if(_soundPath.isEmpty){
-      ToastManager.show('Please choose an audio file to upload');
+      ToastManager.show('CreateSoundSticker_HintChooseSoundFileUpload'.i18n());
       return;
     }
     if(!FileSystemEntity.isFileSync(_soundPath)){
-      ToastManager.show('The path your choose is not a file.');
+      ToastManager.show('CreateSoundSticker_HintPathNotFile'.i18n());
       return;
     }
 
     final file = File(_soundPath);
     if(!file.existsSync()){
-      ToastManager.show('The file has been deleted, please choose another file.');
+      ToastManager.show('CreateSoundSticker_HintFileDeleted'.i18n());
       return;
     }
 
@@ -180,14 +181,14 @@ class _CreatePlainSoundStickerPageState extends State<CreatePlainSoundStickerPag
     final uid = KVStorageManager.getString('app_current_uid', '');   // TODO : SHOULD DEFINE THIS KEY IN COMMON WORKSPACE
     final token = KVStorageManager.getString('app_current_token', ''); // TODO : SHOULD DEFINE THIS KEY IN COMMON WORKSPACE
     if(uid.isEmpty || token.isEmpty){
-      ToastManager.show('Login expired. Please login again.');
+      ToastManager.show('CreateSoundSticker_HintLoginExpired'.i18n());
       return;
     }
     final paramsTitle = _soundTitleController.text.trim();
     final paramsDescription = _soundDescriptionController.text;
     
     // 2. Upload file to file server
-    ToastManager.show('Uploading...');
+    ToastManager.show('CreateSoundSticker_HintUploading'.i18n());
     OSSUploader.instance.uploadFile(file, uid, token, 'create_sticker_plain_sound',
       onSuccess: (path, bucket){
         // 3. Add sticker to server
@@ -198,12 +199,12 @@ class _CreatePlainSoundStickerPageState extends State<CreatePlainSoundStickerPag
           duration: 10 * 1000, // TODO: Currently can not find a lib that could support both android, ios, windows, linux, macos and web platform, considering write a new lib or just wait...
         ).then((value){
           if(value.isSuccess){
-            ToastManager.show('Create Success');
+            ToastManager.show('CreateSoundSticker_HintCreateSuccess'.i18n());
           }else{
-            ToastManager.show('Create failed, ${value.message}');
+            ToastManager.show(i18n.tr('CreateSoundSticker_HintCreateFailMessage', value.message));
           }
         }).catchError((error){
-          ToastManager.show('Create failed, $error');
+          ToastManager.show(i18n.tr('CreateSoundSticker_HintCreateFailMessage', error));
         });
       },
       onFail: (code, message){
@@ -215,7 +216,7 @@ class _CreatePlainSoundStickerPageState extends State<CreatePlainSoundStickerPag
   void _onUpdatePressed(){
     // 1. Sound path can not be empty
     if(_soundPath.isEmpty){
-      ToastManager.show('Please choose an image file to upload');
+      ToastManager.show('CreateSoundSticker_HintChooseSoundFileUpload'.i18n());
       return;
     }
     // 2. check whether new image url is already uploaded
@@ -227,17 +228,17 @@ class _CreatePlainSoundStickerPageState extends State<CreatePlainSoundStickerPag
       // Check file path is exist
       final file = File(_soundPath);
       if(!file.existsSync()){
-        ToastManager.show('The file has been deleted, please choose another file.');
+        ToastManager.show('CreateSoundSticker_HintFileDeleted'.i18n());
         return;
       }
       // Upload file to file server
       final uid = KVStorageManager.getString('app_current_uid', '');   // TODO : SHOULD DEFINE THIS KEY IN COMMON WORKSPACE
       final token = KVStorageManager.getString('app_current_token', ''); // TODO : SHOULD DEFINE THIS KEY IN COMMON WORKSPACE
       if(uid.isEmpty || token.isEmpty){
-        ToastManager.show('Login expired. Please login again.');
+        ToastManager.show('CreateSoundSticker_HintLoginExpired'.i18n());
         return;
       }
-      ToastManager.show('Uploading...');
+      ToastManager.show('CreateSoundSticker_HintUploading'.i18n());
       OSSUploader.instance.uploadFile(file, uid, token, 'create_sticker_plain_sound',
         onSuccess: (path, bucket){
           // 3. Add sticker to server
@@ -270,14 +271,14 @@ class _CreatePlainSoundStickerPageState extends State<CreatePlainSoundStickerPag
       final responseCode = response.data['code'];
       final responseMessage = response.data['msg'];
       if(responseCode == 200){
-        ToastManager.show('Sticker update success.');
+        ToastManager.show('CreateSoundSticker_HintCreateSuccess'.i18n());
         Navigator.pop(context);
       } else {
         ToastManager.show(responseMessage);
       }
     }).catchError((error){
       print(error);
-      ToastManager.show('Update plain sound sticker fail, please try again later.');
+      ToastManager.show('CreateSoundSticker_HintError'.i18n());
     });
   }
 

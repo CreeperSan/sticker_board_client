@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:formatter/extensions/collection/collection_operation_extensions.dart';
+import 'package:i18n/i18n.dart';
 import 'package:network/enum/request_method.dart';
 import 'package:network/manager/network_manager.dart';
 import 'package:sticker_board/cache/sticker_category_cache.dart';
@@ -72,10 +73,10 @@ class _CreateTodoListStickerPageState extends State<CreateTodoListStickerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${isCreateSticker ? 'Create' : 'Edit'} Todo List Sticker'),
+        title: Text((isCreateSticker ? 'CreateTodoListSticker_TitleCreate' : 'CreateTodoListSticker_TitleEdit').i18n()),
         actions: [
           CupertinoButton(
-            child: Text(isCreateSticker ? 'Create' : 'Update',
+            child: Text((isCreateSticker ? 'CreateTodoListSticker_ActionCreate' : 'CreateTodoListSticker_ActionEdit').i18n(),
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -90,22 +91,22 @@ class _CreateTodoListStickerPageState extends State<CreateTodoListStickerPage> {
             TextField(
               controller: _titleEditController,
               decoration: InputDecoration(
-                hintText: 'Title',
+                hintText: 'CreateTodoListSticker_ParamsTitle'.i18n(),
               ),
             ),
             TextField(
               controller: _descriptionEditController,
               decoration: InputDecoration(
-                hintText: 'Description',
+                hintText: 'CreateTodoListSticker_PlaceHolderDescription'.i18n(),
               ),
             ),
             ListTile(
               leading: Icon(Icons.category),
-              title: Text('Category'),
+              title: Text('CreateTodoListSticker_ParamsCategory'.i18n()),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if(_categoryModel != null) Text(_categoryModel?.name ?? '<Unnamed Category>'),
+                  if(_categoryModel != null) Text(_categoryModel?.name ?? 'CreateTodoListSticker_ValueCategoryUnknown'.i18n()),
                   Icon(Icons.chevron_right),
                 ],
               ),
@@ -113,7 +114,7 @@ class _CreateTodoListStickerPageState extends State<CreateTodoListStickerPage> {
             ),
             ListTile(
               leading: Icon(Icons.tag),
-              title: Text('Tag'),
+              title: Text('CreateTodoListSticker_ParamsTag'.i18n()),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -173,7 +174,7 @@ class _CreateTodoListStickerPageState extends State<CreateTodoListStickerPage> {
                         ),
                         child: Icon(Icons.add),
                       ),
-                      Text('Add Item'),
+                      Text('CreateTodoListSticker_ActionAddItem'.i18n()),
                     ],
                   ),
                 ),
@@ -255,7 +256,7 @@ class _CreateTodoListStickerPageState extends State<CreateTodoListStickerPage> {
     List<Map<String, dynamic>> todoList = [];
     for(var element in _todoItemList){
       if(element.title.isEmpty){
-        ToastManager.show('Todo item content can not be empty');
+        ToastManager.show('CreateTodoListSticker_HintItemEmpty'.i18n());
         return;
       }
       todoList.add({
@@ -266,7 +267,7 @@ class _CreateTodoListStickerPageState extends State<CreateTodoListStickerPage> {
     }
 
     if(todoList.isEmpty){
-      ToastManager.show('Todo list can not be empty');
+      ToastManager.show('CreateTodoListSticker_HintListEmpty'.i18n());
       return;
     }
 
@@ -291,13 +292,13 @@ class _CreateTodoListStickerPageState extends State<CreateTodoListStickerPage> {
         final code = value.data['code'];
         final message = value.data['msg'];
         if(code == 200){
-          ToastManager.show('Create success');
+          ToastManager.show('CreateTodoListSticker_HintCreateSuccess'.i18n());
           Navigator.pop(context);
         }else{
-          ToastManager.show('Create failed, $message');
+          ToastManager.show(i18n.tr('CreateTodoListSticker_HintCreateFailMessage', message));
         }
       }).catchError((error){
-        ToastManager.show('Create failed, please check your internet connection');
+        ToastManager.show('CreateTodoListSticker_HintCreateFailNetwork'.i18n());
       });
     } else {
       // Update todo sticker
@@ -321,13 +322,13 @@ class _CreateTodoListStickerPageState extends State<CreateTodoListStickerPage> {
         final code = value.data['code'];
         final message = value.data['msg'];
         if(code == 200){
-          ToastManager.show('Update success');
+          ToastManager.show('CreateTodoListSticker_HintCreateSuccessUpdate'.i18n());
           Navigator.pop(context);
         }else{
-          ToastManager.show('Update failed, $message');
+          ToastManager.show(i18n.tr('CreateTodoListSticker_HintCreateFailMessageUpdate', message));
         }
       }).catchError((error){
-        ToastManager.show('Update failed, please check your internet connection');
+        ToastManager.show('CreateTodoListSticker_HintCreateFailNetworkUpdate'.i18n());
       });
     }
   }

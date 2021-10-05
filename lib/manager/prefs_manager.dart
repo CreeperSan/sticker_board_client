@@ -1,6 +1,7 @@
 import 'package:kv_storage/kv_storage.dart';
 import 'package:kv_storage/manager/kv_storage_manager.dart';
 
+@Deprecated('use config (in application_config package) instead')
 class Prefs{
 
   Prefs._();
@@ -13,6 +14,7 @@ class Prefs{
 
 }
 
+@Deprecated('use config (in application_config package) instead')
 class PrefsManager {
 
   PrefsManager._();

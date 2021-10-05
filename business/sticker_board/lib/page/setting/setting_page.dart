@@ -1,14 +1,22 @@
 
+import 'package:application_config/application_config.dart';
 import 'package:flutter/material.dart';
-import 'package:sticker_board/enum/language.dart';
 import 'package:sticker_board/page/setting/dialog/language_select_dialog.dart';
 import 'package:sticker_board/page/setting/widget/setting_group_widget.dart';
 import 'package:sticker_board/page/setting/widget/setting_tile_widget.dart';
 import 'package:toast/manager/toast_manager.dart';
 import 'package:i18n/i18n.dart';
 
-class SettingPage extends StatelessWidget {
-  LanguageSelectDialog? _languageSelectDialog;
+class SettingPage extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() {
+    return _SettingPageState();
+  }
+
+}
+
+class _SettingPageState extends State<SettingPage>{
 
   @override
   Widget build(BuildContext context) {
@@ -24,17 +32,17 @@ class SettingPage extends StatelessWidget {
           children: [
             // Application Setting
             SettingGroupWidget(
-              title: 'Application',
+              title: 'Setting_GroupApplication'.i18n(),
             ),
             SettingTileWidget(
               leading: Icon(Icons.translate),
-              trailing: Text('Auto Detect',
+              trailing: Text(config.getApplicationLanguage().displayName,
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey,
                 ),
               ),
-              content: Text('Language',
+              content: Text('Setting_GroupApplicationLanguage'.tr,
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.black,
@@ -49,30 +57,24 @@ class SettingPage extends StatelessWidget {
     );
   }
 
+  //////////////////////////////////////////////////////////////////////////////
   /// Application language
-
+  ///
   void _onLanguageClick(BuildContext context){
-    _languageSelectDialog?.close();
-    _languageSelectDialog = LanguageSelectDialog(
-      onLanguageSelected: _onLanguageSelected,
-    ).show(context);
+    showDialog(context: context, builder: (dialogContext){
+      return LanguageSelectDialog(
+        onLanguageSelected: _onLanguageSelected,
+      );
+    });
   }
-
   void _onLanguageSelected(Language language){
-    switch(language){
-      case Language.SimplifyChinese: {
-        i18n.setCurrentLocalization('简体中文');
-        break;
-      }
-      case Language.English: {
-        i18n.setCurrentLocalization('English');
-        break;
-      }
-      case Language.AutoDetect: {
-        ToastManager.show('TODO');
-        break;
-      }
-    }
-  }
+    Navigator.pop(context);
 
+    i18n.setCurrentLocalization(language);
+    config.setApplicationLanguage(language);
+
+    setState(() { });
+
+    ToastManager.show('Setting_GroupApplicationLanguageChangeHint'.tr);
+  }
 }

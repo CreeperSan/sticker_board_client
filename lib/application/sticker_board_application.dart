@@ -1,4 +1,5 @@
 import 'package:account_api/account_api.dart';
+import 'package:application_config/application_config.dart';
 import 'package:device_information/device_information.dart';
 import 'package:flutter/material.dart';
 import 'package:kv_storage/manager/kv_storage_manager.dart';
@@ -55,11 +56,15 @@ class StickerBoardApplication extends StatelessWidget {
     });
 
     // Initialize i18n
-    EnglishLocalization englishLocalization = EnglishLocalization();
-    SimplifyChineseLocalization simplifyChineseLocalization = SimplifyChineseLocalization();
-    i18n.registerLocalization(englishLocalization);
-    i18n.registerLocalization(simplifyChineseLocalization);
-    i18n.setCurrentLocalization(englishLocalization.getName());
+    i18n.registerLocalization(languageEnglishAmerica);
+    i18n.registerLocalization(languageSimplifyChinese);
+    final applicationLanguage = config.getApplicationLanguage();
+    if(applicationLanguage == languageAutoDetect){
+      // TODO: detective system language
+      i18n.setCurrentLocalization(languageEnglishAmerica);
+    }else{
+      i18n.setCurrentLocalization(applicationLanguage);
+    }
 
     // Initialize Prefs
     PrefsManager.instance.prevVersion = ApplicationConst.ApplicationVersionCode;
@@ -112,11 +117,8 @@ class StickerBoardApplication extends StatelessWidget {
 
         // Sticker Board
         RouterConst.StickerBoardIndex : (context, [params]) => StickerBoard.IndexPage(),
-        RouterConst.StickerBoardCategoryList : (context, [params]) => StickerBoard.CategoryPage(),
         RouterConst.StickerBoardCategoryAdd : (context, [params]) => StickerBoard.CategoryAddPage(),
-        RouterConst.StickerBoardTagList : (context, [params]) => StickerBoard.TagPage(),
         RouterConst.StickerBoardTagAdd : (context, [params]) => StickerBoard.TagAddPage(),
-        RouterConst.StickerBoardSimpleTextAdd : (context, [params]) => StickerBoard.SimpleTextAddPage(),
       },
     );
   }
@@ -172,22 +174,4 @@ class StickerBoardApplication extends StatelessWidget {
 
 }
 
-
-class EnglishLocalization extends Localization{
-  @override
-  String getName() => 'English';
-
-  @override
-  String getPath() => 'assets/i18n/en_US.json';
-
-}
-
-class SimplifyChineseLocalization extends Localization{
-  @override
-  String getName() => '简体中文';
-
-  @override
-  String getPath() => 'assets/i18n/zh_CN.json';
-
-}
 

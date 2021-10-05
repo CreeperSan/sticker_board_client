@@ -1,4 +1,4 @@
-name: splash_screen
+name: application_config
 description: A new Flutter package project.
 version: 0.0.1
 homepage:
@@ -10,13 +10,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  kv_storage :
+    path: ../../base/kv_storage
   i18n:
     path: ../../base/i18n
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^1.0.0
 
 flutter:
-
-

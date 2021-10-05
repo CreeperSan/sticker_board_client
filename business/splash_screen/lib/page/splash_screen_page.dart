@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:i18n/i18n.dart';
 
 class SplashScreenPage extends StatefulWidget{
   Future<dynamic> Function()? onInitialize;
@@ -55,7 +56,7 @@ class _SplashScreenPageState extends State<SplashScreenPage>{
               size: 48,
               color: Colors.white,
             ),
-            Text('Sticker Board',
+            Text('Application_AppName'.i18n(),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 26,

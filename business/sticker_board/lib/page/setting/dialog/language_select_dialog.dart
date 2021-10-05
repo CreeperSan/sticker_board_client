@@ -1,10 +1,8 @@
 
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
-import 'package:sticker_board/enum/language.dart';
+import 'package:i18n/i18n.dart';
 
-class LanguageSelectDialog extends Dialog {
+class LanguageSelectDialog extends StatelessWidget {
   BuildContext? dialogContext;
   void Function(Language language)? onLanguageSelected;
 
@@ -12,17 +10,11 @@ class LanguageSelectDialog extends Dialog {
     this.onLanguageSelected,
   });
 
-  List<dynamic> _data = [
-    ['Auto Detect' , Language.AutoDetect,],
-    ['English' , Language.English,],
-    ['简体中文' , Language.SimplifyChinese,],
-  ];
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    return Material(
+    Widget dialogWidget = Material(
       color: Colors.transparent,
       child: Center(
         child: Container(
@@ -36,25 +28,24 @@ class LanguageSelectDialog extends Dialog {
           ),
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 18,
-                  vertical: 22,
-                ),
-                child: Text('Language Select',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
+              Container(
+                height: 64,
+                child: Center(
+                  child: Text('Setting_GroupApplicationLanguageDialogTitle'.i18n(),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
                   ),
                 ),
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: _data.length,
+                  itemCount: languages.length,
                   itemBuilder: (itemContext, index){
-                    final item = _data[index];
-                    final displayName = item[0].toString();
-                    final language = item[1] as Language;
+                    final item = languages[index];
+                    final displayName = item.displayName;
+                    final language = item;
                     return ListTile(
                       title: Text('$displayName'),
                       onTap: () => _onSelected(language),
@@ -67,31 +58,20 @@ class LanguageSelectDialog extends Dialog {
         ),
       ),
     );
+
+    dialogWidget = Dialog(
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: 40,
+        vertical: 24,
+      ),
+      child: dialogWidget,
+    );
+
+    return dialogWidget;
   }
 
   void _onSelected(Language language){
-    close();
     onLanguageSelected?.call(language);
-  }
-
-  LanguageSelectDialog show(BuildContext context){
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (dialogContext){
-        this.dialogContext = dialogContext;
-        return build(context);
-      },
-    );
-    return this;
-  }
-
-  void close(){
-    final context = dialogContext;
-    if(context != null){
-      Navigator.pop(context);
-      dialogContext = null;
-    }
   }
 
 }

@@ -29,6 +29,8 @@ dependencies:
     path: ../account_api
   url_builder:
     path: ../url_builder
+  i18n:
+    path: ../../base/i18n
 
 dev_dependencies:
   flutter_test:

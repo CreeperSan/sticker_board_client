@@ -1,5 +1,5 @@
 
-import 'package:i18n/interface/localization.dart';
+import 'package:i18n/i18n.dart';
 
 class I18n {
 
@@ -7,27 +7,28 @@ class I18n {
 
   I18n._();
 
-  Map<String, Localization> _localizations = {};
-  Localization? _currentLocalization;
+  final Map<String, Language> _localizations = {};
+  Language? _currentLocalization;
 
-  void registerLocalization(Localization localization){
-    localization.readFromResources();
-    _localizations[localization.getName()] = localization;
+  void registerLocalization(Language localization){
+    _localizations[localization.flag] = localization;
   }
 
-  void unregisterLocalization(String name){
-    _localizations.remove(name);
-    if(name == _currentLocalization?.getName()){
+  void unregisterLocalization(Language localization){
+    _localizations.remove(localization.flag);
+    if(localization.flag == _currentLocalization?.flag){
       _currentLocalization = null;
     }
   }
 
-  List<Localization> getSupportedLocalizationList(){
+  List<Language> getSupportedLocalizationList(){
     return _localizations.values.toList();
   }
 
-  void setCurrentLocalization(String name){
-    _currentLocalization = _localizations[name];
+  void setCurrentLocalization(Language language){
+    final localization = _localizations[language.flag];
+    localization?.readFromResources();
+    _currentLocalization = localization;
   }
 
   String str(String key){

@@ -3,6 +3,7 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:i18n/i18n.dart';
 import 'package:log/log.dart';
 import 'package:network/manager/network_manager.dart';
 import 'package:network/network.dart';
@@ -60,10 +61,10 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${isCreateSticker ? 'Create': 'Edit'} Plain Text Sticker'),
+        title: Text(i18n.str(isCreateSticker ? 'CreatePlainText_TitleCreate' : 'CreatePlainText_TitleEdit')),
         actions: [
           CupertinoButton(
-            child: Text(isCreateSticker ? 'Create' : 'Update',
+            child: Text(i18n.str(isCreateSticker ? 'CreatePlainText_ActionCreate' : 'CreatePlainText_ActionEdit'),
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -78,16 +79,16 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
             maxLines: 1,
             controller: _titleEditController,
             decoration: InputDecoration(
-              hintText: 'Title',
+              hintText: i18n.str('CreatePlainText_Title'),
             ),
           ),
           ListTile(
             leading: Icon(Icons.category),
-            title: Text('Category'),
+            title: Text(i18n.str('CreatePlainText_Category')),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if(_categoryModel != null) Text(_categoryModel?.name ?? '<Unnamed Category>'),
+                if(_categoryModel != null) Text(_categoryModel?.name ?? i18n.str('CreatePlainText_CategoryUnknown')),
                 Icon(Icons.chevron_right),
               ],
             ),
@@ -95,7 +96,7 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
           ),
           ListTile(
             leading: Icon(Icons.tag),
-            title: Text('Tag'),
+            title: Text(i18n.str('CreatePlainText_Tag')),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -120,7 +121,7 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
               controller: _messageEditController,
               textInputAction: TextInputAction.newline,
               decoration: InputDecoration(
-                hintText: 'Message',
+                hintText: i18n.str('CreatePlainText_Message'),
               ),
             ),
           ),
@@ -137,7 +138,7 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
     final messageText = _messageEditController.text;
 
     if(titleText.isEmpty && messageText.isEmpty){
-      ToastManager.show('Please enter title or message');
+      ToastManager.show(i18n.str('CreatePlainText_HintEmptyTitleOrMessage'));
       return;
     }
 
@@ -161,18 +162,18 @@ class _CreatePlainTextStickerPageState extends State<CreatePlainTextStickerPage>
             LogManager.i('Create Plain Text Sticker Response : ', this.runtimeType.toString());
             LogManager.i(response, this.runtimeType.toString());
             final code = response['code'] ?? 0;
-            final message = response['msg'] ?? 'Create sticker failed, please try again later';
+            final message = response['msg'] ?? i18n.str('CreatePlainText_HintCreateStickerFail');
             // ToastManager.show(message);
             if(code == 200) {
               Navigator.pop(context);
             } else {
-              ToastManager.show('Create sticker failed, $message');
+              ToastManager.show(i18n.tr('CreatePlainText_HintCreateFailMessage'));
             }
           },
           onFail: (error) {
             LogManager.i('Create Plain Text Sticker Fail : ', this.runtimeType.toString());
             LogManager.i(error.toString(), this.runtimeType.toString());
-            ToastManager.show('Create sticker failed, network error');
+            ToastManager.show(i18n.str('CreatePlainText_HintNetworkErrorCreate'));
           }
       );
     } else {

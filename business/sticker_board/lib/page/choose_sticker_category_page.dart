@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:i18n/i18n.dart';
 import 'package:sticker_board/cache/sticker_category_cache.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
 
@@ -14,7 +15,7 @@ class ChooseStickerCategoryPage extends StatefulWidget {
 
 class _ChooseStickerCategoryPageState extends State<ChooseStickerCategoryPage>{
   final List<CategoryModel>  _categoryList = [];
-  String _hintMessage = 'Loading';
+  String _hintMessage = i18n.str('ChooseCategory_Loading');
 
   @override
   void initState() {
@@ -30,10 +31,10 @@ class _ChooseStickerCategoryPageState extends State<ChooseStickerCategoryPage>{
           icon: Icon(Icons.clear),
           onPressed: _onBackPressed,
         ),
-        title: Text('Choose Category'),
+        title: Text(i18n.str('ChooseCategory_Title')),
         actions: [
           IconButton(
-            icon: Text('Clear',
+            icon: Text(i18n.str('ChooseCategory_ActionClear'),
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -78,7 +79,7 @@ class _ChooseStickerCategoryPageState extends State<ChooseStickerCategoryPage>{
   }
 
   Future _onRefreshClick(bool forceRefresh) async {
-    _hintMessage = 'Loading';
+    _hintMessage = i18n.str('ChooseCategory_Loading');
     setState(() { });
     return StickerCategoryCache.instance.fetch(
       forceRefresh: forceRefresh,
@@ -87,7 +88,7 @@ class _ChooseStickerCategoryPageState extends State<ChooseStickerCategoryPage>{
       _hintMessage = response.message;
       if(response.isFetchSuccess){
         if(response.data.isEmpty){
-          _hintMessage = 'Empty';
+          _hintMessage = i18n.str('ChooseCategory_EmptyCategory');
         } else {
           _hintMessage = '';
           _categoryList.addAll(response.data);

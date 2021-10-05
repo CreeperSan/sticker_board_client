@@ -2,6 +2,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:i18n/i18n.dart';
 import 'package:sticker_board/page/create_plain_image_sticker_page.dart';
 import 'package:sticker_board/page/create_plain_sound_sticker_page.dart';
 import 'package:sticker_board/page/create_plain_text_sticker_page.dart';
@@ -36,22 +37,22 @@ class StickerTypeSelectToCreatePage extends StatelessWidget{
                       children: [
                         ListTile(
                           leading: Icon(Icons.message_outlined),
-                          title: Text('Plain Text'),
+                          title: Text(i18n.str('CreateSticker_PlainText')),
                           onTap: () => _onCreatePlainTextClicked(context),
                         ),
                         ListTile(
                           leading: Icon(Icons.image_outlined),
-                          title: Text('Plain Image'),
+                          title: Text(i18n.str('CreateSticker_PlainImage')),
                           onTap: () => _onCreatePlainImageClicked(context),
                         ),
                         ListTile(
                           leading: Icon(Icons.keyboard_voice_outlined),
-                          title: Text('Plain Sound'),
+                          title: Text(i18n.str('CreateSticker_PlainSound')),
                           onTap: () => _onCreatePlainSoundClicked(context),
                         ),
                         ListTile(
                           leading: Icon(Icons.list),
-                          title: Text('Todo List'),
+                          title: Text(i18n.str('CreateSticker_Todo')),
                           onTap: () => _onCreateTodoListClicked(context),
                         ),
                       ],

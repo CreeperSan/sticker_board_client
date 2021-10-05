@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:i18n/i18n.dart';
 import 'package:network/enum/request_method.dart';
 import 'package:network/manager/network_manager.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ import 'package:sticker_board/widget/category_widget.dart';
 import 'package:sticker_board/widget/drawer_group_widget.dart';
 import 'package:sticker_board/widget/drawer_hint_widget.dart';
 import 'package:sticker_board/widget/drawer_normal_tile.dart';
-import 'package:sticker_board/widget/index_create_sticker_header_widget.dart';
+import 'package:sticker_board/widget/sticker/not_support_sticker_widget.dart';
 import 'package:sticker_board/widget/sticker/plain_image_sticker_widget.dart';
 import 'package:sticker_board/widget/sticker/plain_sound_sticker_widget.dart';
 import 'package:sticker_board/widget/sticker/plain_text_sticker_widget.dart';
@@ -81,10 +82,10 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
         return Scaffold(
           backgroundColor: Color(0xFFF2F5F7),
           appBar: AppBar(
-            title: Text('Sticker Board'),
+            title: Text(i18n.str('Application_AppName')),
             actions: [
               CupertinoButton(
-                child: Text('Refresh',
+                child: Text(i18n.str('Index_Refresh'),
                   style: TextStyle(
                     color: Colors.white,
                   ),
@@ -102,7 +103,7 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
                       color: Colors.lightBlue,
                     ),
                     child: Center(
-                      child: Text('Sticker Board',
+                      child: Text(i18n.str('Application_AppName'),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 26,
@@ -138,12 +139,12 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
           mainAxisSize: MainAxisSize.min,
           children: [
             DrawerGroupWidget(
-              name: 'Sticker Board',
+              name: i18n.str('Application_AppName'),
               state: NetworkLoadingState.Idle,
             ),
             DrawerItemWidget(
               icon: Icon(Icons.inbox),
-              name: 'All',
+              name: i18n.str('Index_AllSticker'),
               onPressed: () => _onStickerBoardAllPressed(module),
             ),
             // DrawerItemWidget(
@@ -162,7 +163,7 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
       builder: (consumerContext, module, child){
         List<Widget> categoryWidgetList = [];
         categoryWidgetList.add(DrawerGroupWidget(
-          name: 'Category',
+          name: i18n.str('Index_DrawerCategory'),
           state: module.categoryLoadingState,
           onRefreshPress: () => module.loadCategory(),
           onAddPress: () => _onAddCategoryPressed(module),
@@ -170,7 +171,7 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
         final categoryList = module.categoryList;
         if(categoryList.isEmpty){
           categoryWidgetList.add(DrawerHintWidget(
-            message: 'No category',
+            message: i18n.str('Index_DrawerCategoryEmpty'),
           ));
         } else {
           module.categoryList.forEach((element) {
@@ -193,7 +194,7 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
       builder: (consumerContext, module, child){
         List<Widget> tagWidgetList = [];
         tagWidgetList.add(DrawerGroupWidget(
-          name: 'Tag',
+          name: i18n.str('Index_DrawerTag'),
           state: module.tagLoadingState,
           onRefreshPress: () => module.loadTag(),
           onAddPress: () => _onAddTagPressed(module),
@@ -201,7 +202,7 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
         final tagList = module.tagList;
         if(tagList.isEmpty){
           tagWidgetList.add(DrawerHintWidget(
-            message: 'No tag',
+            message: i18n.str('Index_DrawerTagEmpty'),
           ));
         } else {
           module.tagList.forEach((element) {
@@ -224,12 +225,12 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
       mainAxisSize: MainAxisSize.min,
       children: [
         DrawerGroupWidget(
-          name: 'Setting',
+          name: i18n.str('Index_DrawerSetting'),
           state: NetworkLoadingState.Success,
         ),
         DrawerNormalTile(
           icon: Icon(Icons.settings),
-          title: 'Setting',
+          title: i18n.str('Index_DrawerSettingSetting'),
           onClick: _onSettingClick,
         ),
       ],
@@ -345,9 +346,7 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
                         onClick: () =>  _onTodoListStickerClicked(stickerModel),
                       );
                     } else { ///////////////////////////////////////////////////
-                      return Container(
-                        child: Text('Not supported yet, please update to newest version.'),
-                      );
+                      return NotSupportStickerWidget();
                     }
                   },
                   staggeredTileBuilder: (int index) {

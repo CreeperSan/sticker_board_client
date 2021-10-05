@@ -4,6 +4,7 @@ import 'package:account/operator/account_operator.dart';
 import 'package:account_api/account_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:i18n/i18n.dart';
 import 'package:kv_storage/manager/kv_storage_manager.dart';
 import 'package:log/log.dart';
 import 'package:device_information/device_information.dart';
@@ -67,17 +68,17 @@ class _LoginPageState extends State<LoginPage>{
             TextField(
               controller: _accountController,
               decoration: InputDecoration(
-                hintText: 'Your Account',
+                hintText: 'Login_PlaceHolderAccount'.i18n(),
               ),
             ),
             TextField(
               controller: _passwordController,
               decoration: InputDecoration(
-                hintText: 'Your Password',
+                hintText: 'Login_PlaceHolderPassword'.i18n(),
               ),
             ),
             CupertinoButton(
-              child: Text('Login',
+              child: Text('Login_ActionLogin'.i18n(),
                 style: TextStyle(
                   fontSize: 20,
                 ),
@@ -85,7 +86,7 @@ class _LoginPageState extends State<LoginPage>{
               onPressed: _triggerLogin,
             ),
             CupertinoButton(
-              child: Text('Register',
+              child: Text('Login_ActionRegister'.i18n(),
                 style: TextStyle(
                   fontSize: 20,
                 ),
@@ -106,12 +107,12 @@ class _LoginPageState extends State<LoginPage>{
     final passwordStr = _passwordController.text;
 
     if(accountStr.isEmpty){
-      ToastManager.show('Account can not be empty.');
+      ToastManager.show('Login_HintAccountEmpty'.i18n());
       return;
     }
 
     if(passwordStr.isEmpty){
-      ToastManager.show('Password can not be empty.');
+      ToastManager.show('Login_HintPasswordEmpty'.i18n());
       return;
     }
 
@@ -135,7 +136,7 @@ class _LoginPageState extends State<LoginPage>{
       },
       onFail: (code, message){
         LogManager.w('Login Failed. Message=$message', ConstAccount.TAG);
-        ToastManager.show('Login Fail, $message');
+        ToastManager.show(i18n.tr('Login_HintLoginFailMessage', message));
       }
     );
   }
@@ -149,9 +150,9 @@ class _LoginPageState extends State<LoginPage>{
       machineCode: DeviceInformation.machineCode,
       platform: DeviceInformation.platform,
       onAuthSuccess: () => widget.onAuthSuccess?.call(),
-      onAuthFailOther: () => ToastManager.show('Login fail, please check your internet connection'),
+      onAuthFailOther: () => ToastManager.show('Login_HintLoginFailNetwork'.i18n()),
       onAuthFailTokenExpired: (){
-        ToastManager.show('Account information expired, please login again.');
+        ToastManager.show('Login_HintTokenExpired'.i18n());
         widget.onTokenExpired?.call();
       }
     );
