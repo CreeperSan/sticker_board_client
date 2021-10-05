@@ -5,6 +5,7 @@ import 'package:sticker_board/page/setting/dialog/language_select_dialog.dart';
 import 'package:sticker_board/page/setting/widget/setting_group_widget.dart';
 import 'package:sticker_board/page/setting/widget/setting_tile_widget.dart';
 import 'package:toast/manager/toast_manager.dart';
+import 'package:i18n/i18n.dart';
 
 class SettingPage extends StatelessWidget {
   LanguageSelectDialog? _languageSelectDialog;
@@ -13,7 +14,8 @@ class SettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Setting'),
+        // title: Text('Setting'),
+        title: Text(i18n.str('Setting_SettingPage')),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -57,7 +59,20 @@ class SettingPage extends StatelessWidget {
   }
 
   void _onLanguageSelected(Language language){
-    ToastManager.show(language.toString());
+    switch(language){
+      case Language.SimplifyChinese: {
+        i18n.setCurrentLocalization('简体中文');
+        break;
+      }
+      case Language.English: {
+        i18n.setCurrentLocalization('English');
+        break;
+      }
+      case Language.AutoDetect: {
+        ToastManager.show('TODO');
+        break;
+      }
+    }
   }
 
 }

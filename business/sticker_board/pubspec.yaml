@@ -30,11 +30,14 @@ dependencies:
     path: ../file_uploader
   formatter:
     path: ../../base/formatter
+  i18n:
+    path: ../../base/i18n
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
+#  assets:
 
 

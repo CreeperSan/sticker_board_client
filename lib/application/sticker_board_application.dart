@@ -23,6 +23,8 @@ import 'package:version_api/version_api.dart';
 import 'package:sticker_board_api/sticker_board_api.dart';
 import 'package:account/account.dart';
 import 'package:device_information/device_information.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:i18n/i18n.dart';
 
 class StickerBoardApplication extends StatelessWidget {
 
@@ -52,6 +54,13 @@ class StickerBoardApplication extends StatelessWidget {
       'sticker-board-version-code' : ApplicationConst.ApplicationVersionCode,
     });
 
+    // Initialize i18n
+    EnglishLocalization englishLocalization = EnglishLocalization();
+    SimplifyChineseLocalization simplifyChineseLocalization = SimplifyChineseLocalization();
+    i18n.registerLocalization(englishLocalization);
+    i18n.registerLocalization(simplifyChineseLocalization);
+    i18n.setCurrentLocalization(englishLocalization.getName());
+
     // Initialize Prefs
     PrefsManager.instance.prevVersion = ApplicationConst.ApplicationVersionCode;
 
@@ -75,6 +84,12 @@ class StickerBoardApplication extends StatelessWidget {
     return MaterialApp(
       title: ApplicationConst.ApplicationName,
       initialRoute: RouterConst.SplashScreen,
+      localeResolutionCallback: (locale, supported){
+        print('localeResolutionCallback($locale, $supported)');
+      },
+      localeListResolutionCallback: (locales, supportedLocales){
+        print('localeListResolutionCallback($locales, $supportedLocales)');
+      },
       routes: {
         // Splash Screen
         RouterConst.SplashScreen : (context, [params]) => SplashScreenPage(
@@ -158,4 +173,21 @@ class StickerBoardApplication extends StatelessWidget {
 }
 
 
+class EnglishLocalization extends Localization{
+  @override
+  String getName() => 'English';
+
+  @override
+  String getPath() => 'assets/i18n/en_US.json';
+
+}
+
+class SimplifyChineseLocalization extends Localization{
+  @override
+  String getName() => '简体中文';
+
+  @override
+  String getPath() => 'assets/i18n/zh_CN.json';
+
+}
 

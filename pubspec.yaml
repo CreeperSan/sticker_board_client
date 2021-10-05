@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   cupertino_icons: ^1.0.2
 
   # lib from base layer
@@ -26,6 +28,8 @@ dependencies:
     path: base/lifecycle
   network:
     path: base/network
+  i18n:
+    path: base/i18n
 
   # lib from business layer
   account:
@@ -53,3 +57,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/i18n/
