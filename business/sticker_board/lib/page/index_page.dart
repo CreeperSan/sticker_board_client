@@ -1,12 +1,14 @@
 
 import 'dart:math';
 
+import 'package:account/account.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:i18n/i18n.dart';
 import 'package:network/enum/request_method.dart';
 import 'package:network/manager/network_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:route/route.dart';
 import 'package:sticker_board/enum/network_loading_state.dart';
 import 'package:sticker_board/model/page/category_add_page_result_model.dart';
 import 'package:sticker_board/model/page/tag_add_page_result_model.dart';
@@ -225,13 +227,18 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
       mainAxisSize: MainAxisSize.min,
       children: [
         DrawerGroupWidget(
-          name: i18n.str('Index_DrawerSetting'),
+          name: 'Index_DrawerSetting'.tr,
           state: NetworkLoadingState.Success,
         ),
         DrawerNormalTile(
           icon: Icon(Icons.settings),
-          title: i18n.str('Index_DrawerSettingSetting'),
+          title: 'Index_DrawerSettingSetting'.tr,
           onClick: _onSettingClick,
+        ),
+        DrawerNormalTile(
+          icon: Icon(Icons.transit_enterexit),
+          title: 'Index_DrawerSettingExitAccount'.tr,
+          onClick: _onExitAccountClick,
         ),
       ],
     );
@@ -289,6 +296,12 @@ class _IndexPageState extends State<IndexPage> with WidgetsBindingObserver {
         return SettingPage();
       }
     ));
+  }
+  
+  void _onExitAccountClick(){
+    router.buildLoginPage(context,
+      autoLogin: false,
+    ).push();
   }
 
   // void _onStickerBoardArchivePressed(){

@@ -1,0 +1,34 @@
+name: route
+description: A new Flutter package project.
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  account:
+    path: ../account
+  account_api:
+    path: ../account_api
+  sticker_board:
+    path: ../sticker_board
+  sticker_board_api:
+    path: ../sticker_board_api
+  splash_screen:
+    path: ../splash_screen
+  splash_screen_api:
+    path: ../splash_screen_api
+  application_config:
+    path: ../application_config
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+flutter:
+

@@ -18,6 +18,7 @@ class LoginPage extends StatefulWidget{
   void Function()? onTokenExpired;
   final String cachedToken;
   final String cachedUID;
+  final bool autoLogin;
 
   LoginPage({
     required this.onLoginSuccess,
@@ -25,6 +26,7 @@ class LoginPage extends StatefulWidget{
     this.cachedUID = '',
     this.onAuthSuccess,
     this.onTokenExpired,
+    this.autoLogin = false,
   });
 
   @override
@@ -47,8 +49,10 @@ class _LoginPageState extends State<LoginPage>{
     _accountController = TextEditingController();
     _passwordController = TextEditingController();
 
-    if(widget.cachedUID.isNotEmpty && widget.cachedToken.isNotEmpty){
-      Future.delayed(Duration(milliseconds: 300), _triggerLoginUsingCache);
+    if(widget.autoLogin){
+      if(widget.cachedUID.isNotEmpty && widget.cachedToken.isNotEmpty){
+        Future.delayed(Duration(milliseconds: 300), _triggerLoginUsingCache);
+      }
     }
   }
 

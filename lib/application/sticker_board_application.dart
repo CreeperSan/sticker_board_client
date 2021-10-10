@@ -112,6 +112,7 @@ class StickerBoardApplication extends StatelessWidget {
           onTokenExpired: () => _onLoginTokenExpired(context),
           cachedToken: PrefsManager.instance.token,
           cachedUID: PrefsManager.instance.uid,
+          autoLogin: params?['auto_login'] ?? true,
         ),
         RouterConst.AccountRegister : (context, [params]) => RegisterPage(),
 
@@ -133,7 +134,11 @@ class StickerBoardApplication extends StatelessWidget {
 
   /// Finish Initialize
   void _onSplashScreenPageInitializeFinish(BuildContext context, dynamic initResponse){
-    Navigator.pushReplacementNamed(context, RouterConst.AccountLogin);
+    Navigator.pushReplacementNamed(context, RouterConst.AccountLogin,
+      arguments: {
+        'auto_login' : true,
+      },
+    );
   }
 
   /// Login

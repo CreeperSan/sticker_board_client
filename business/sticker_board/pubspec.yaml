@@ -34,6 +34,10 @@ dependencies:
     path: ../../base/i18n
   application_config:
     path: ../application_config
+  account:
+    path: ../account
+  route:
+    path: ../route
 
 dev_dependencies:
   flutter_test:
